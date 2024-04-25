@@ -13,12 +13,15 @@ import {
   TableRow,
   Pagination,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
 import BarChartCustom from "../components/Overview/Bar";
 import PieChartCustom from "../components/Overview/Pie";
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 
-function OverviewAdmin() {
+const OverviewAdmin = () => {
   const [exams, setExams] = useState([]);
   const [selectedExam, setSelectedExam] = useState(null);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -26,19 +29,14 @@ function OverviewAdmin() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBar, setSelectedBar] = useState(null);
   const [statusUpdated, setStatusUpdated] = useState(false);
-  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
- 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/overview/barchart"
-        );
-        setExams(response.data);
-        
-        
-       
+        const { data } = await axios.get("http://localhost:3001/overview/barchart");
+        setExams(data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching exams data:", error);
       }
@@ -46,21 +44,16 @@ function OverviewAdmin() {
     fetchData();
   }, [statusUpdated]);
 
- 
   const updateStatus = () => {
     setStatusUpdated(true);
   };
 
   const fetchUsersByExam = async (examId, assignedDepartment) => {
     try {
-      const url = `http://localhost:3001/overview/usersByExam/${examId}`;
-      const response = await axios.get(url);
-      const users = response.data;
-
-      const departmentFilteredUsers =
-        assignedDepartment === "General"
-          ? users
-          : users.filter((user) => user.department === assignedDepartment);
+      const { data: users } = await axios.get(`http://localhost:3001/overview/usersByExam/${examId}`);
+      const departmentFilteredUsers = assignedDepartment === "General"
+        ? users
+        : users.filter(({ department }) => department === assignedDepartment);
 
       setFilteredUsers(departmentFilteredUsers);
     } catch (error) {
@@ -70,12 +63,7 @@ function OverviewAdmin() {
 
   const onExamBarClick = async (data) => {
     if (data && data.activeLabel) {
-      const clickedExam = exams.find(
-        (exam) => exam.examTitle === data.activeLabel
-      );
-
-      
-     
+      const clickedExam = exams.find(({ examTitle }) => examTitle === data.activeLabel);
 
       setSelectedExam(clickedExam);
       if (clickedExam && clickedExam._id) {
@@ -91,66 +79,53 @@ function OverviewAdmin() {
   const endIndex = startIndex + rowsPerPage;
 
   const displayedUsers = searchTerm
-    ? filteredUsers.filter((user) =>
-        user.username.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+    ? filteredUsers.filter(({ username }) => username.toLowerCase().includes(searchTerm.toLowerCase()))
     : filteredUsers;
+
   const handleBarHover = (data) => {
     setSelectedBar(data);
   };
+
   return (
-    <Card sx={{ m: 2, minWidth: "1000px" }}>
+    <Card sx={{ m: 2 }}>
       <CardContent>
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <Paper
-              elevation={3}
-              style={{
-                padding: "10px",
-                height: "100%",
-                marginTop: "10px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h6"></Typography>
-              <PieChartCustom selectedBar={selectedBar} />
+            <Paper elevation={3} sx={{ p: 2, height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <Typography variant="h6" align="center">Distribution by Department</Typography>
+              {loading ? (
+                <CircularProgress sx={{ mt: 2 }} />
+              ) : (
+                <PieChartCustom selectedBar={selectedBar} />
+              )}
             </Paper>
           </Grid>
           <Grid item xs={6}>
-            <Paper
-              elevation={3}
-              style={{
-                padding: "10px",
-                height: "100%",
-                marginTop: "10px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h6"></Typography>
-              <BarChartCustom
-                data={exams} 
-                onBarHover={handleBarHover}
-                onBarClick={onExamBarClick}
-              />
+            <Paper elevation={3} sx={{ p: 2, height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <Typography variant="h6" align="center">Exam Overview</Typography>
+              <BarChartCustom data={exams} onBarHover={handleBarHover} onBarClick={onExamBarClick} />
             </Paper>
           </Grid>
         </Grid>
 
         <TextField
-          label="Search Username"
+          placeholder="Search Username"
           variant="outlined"
           fullWidth
           margin="normal"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ marginTop: "40px", width: "466px" }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+          sx={{ mt: 4, width: 300 }}
         />
 
-        <TableContainer component={Paper} style={{ marginTop: "10px" }}>
+        <TableContainer component={Paper} sx={{ mt: 2 }}>
           <Table>
             <TableHead>
               <TableRow style={{ backgroundColor: "#e71e4a" }}>
@@ -161,17 +136,12 @@ function OverviewAdmin() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {displayedUsers.slice(startIndex, endIndex).map((user, index) => (
-                <TableRow key={user._id || index}>
-                  {" "}
-                  <TableCell>{user.username}</TableCell>
-                  <TableCell>{user.user_role}</TableCell>
-                  <TableCell>{user.department}</TableCell>
-                  <TableCell>
-                    {user.usersExams.find(
-                      (exam) => exam.examId === selectedExam?._id
-                    )?.status || "Incomplete"}
-                  </TableCell>
+              {displayedUsers.slice(startIndex, endIndex).map(({ _id, username, user_role, department, usersExams }) => (
+                <TableRow key={_id}>
+                  <TableCell>{username}</TableCell>
+                  <TableCell>{user_role}</TableCell>
+                  <TableCell>{department}</TableCell>
+                  <TableCell>{usersExams.find(({ examId }) => examId === selectedExam?._id)?.status || "Incomplete"}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -182,11 +152,11 @@ function OverviewAdmin() {
           count={Math.ceil(filteredUsers.length / rowsPerPage)}
           page={page}
           onChange={(event, value) => setPage(value)}
-          style={{ marginTop: "20px", justifyContent: "center" }}
+          sx={{ mt: 2, justifyContent: "center" }}
         />
       </CardContent>
     </Card>
   );
-}
+};
 
 export default OverviewAdmin;

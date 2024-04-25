@@ -10,7 +10,7 @@ function ReturnDashboard() {
     <Button
       variant="contained"
       onClick={() => navigate("/dashboard")}
-      sx={{ textTransform: "capitalize", px: 2, py: 0.5, borderRadius: "0px" }}
+      sx={{ textTransform: "capitalize", px: 2, py: 0.5, borderRadius: "5px", bgcolor: "#e11d48"}}
     >
       <SlArrowLeft /> &nbsp; Return to Dashboard
     </Button>

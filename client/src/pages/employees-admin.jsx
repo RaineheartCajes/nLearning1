@@ -32,6 +32,8 @@ import "../assets/styles/ExamRoutes.css";
 import AddEmployeeModal from "../components/AddEmployeeModal";
 import { Pagination } from "@mui/material";
 import { useAuth } from "../contexts/auth-context";
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 
 const EmployeesAdmin = () => {
   const [data, setData] = useState([]);
@@ -187,31 +189,47 @@ const EmployeesAdmin = () => {
 
   return (
     <div className="exam-details--wrapper">
-       <Toolbar
-        className="exams-category--header"
-        sx={{ justifyContent: "center" }}
-      >
-        <Typography className="exams-category--header--text">
+      {/* <Container sx={{ alignItems: "center", maxWidth:"900px", minWidth:"1000px", minHeight: "70vh" }}></Container> */}
+     
+     <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
+        <Typography variant="h4" component="div">
           Employees
         </Typography>
+        <Button 
+          variant="contained" 
+          onClick={handleOpenModal} 
+          sx={{ bgcolor: "#e11d48", marginLeft:"10px", height: 50}}>
+         + Add employee
+        </Button>
       </Toolbar>
-      <Grid container direction="column" spacing={2} style={{ marginTop: "10px" }}>
-        <Grid item container justifyContent="space-between" alignItems="center">
-          <TextField
-            label="Search by name"
+      
+      <hr></hr>
+      <Grid container direction="column" spacing={2} style={{marginTop: "5px"}}> 
+        <Grid item container justifyContent="right">
+          { <TextField
+            placeholder="Search by name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             variant="outlined"
-            fullWidth
-            style={{ marginRight: 16 }} // Ensure some spacing between the search bar and the button on smaller screens
-          />
-          <Button
+            style={{ width: 200 }} // Ensure some spacing between the search bar and the button on smaller screens
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+         /> }
+            
+          {/* <Button
             variant="contained"
             color="primary"
             onClick={handleOpenModal} // This is where handleOpenModal is used
+            style={{ height: 50}}
           >
             Add Employee
-          </Button>
+          </Button> */}
+         
         </Grid>
         <Grid item style={{ overflow: "hidden" }}>
           <TableContainer

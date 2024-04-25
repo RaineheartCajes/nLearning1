@@ -12,9 +12,8 @@ function Card({ card, editCard, deleteCard }) {
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   const renderMediaPreview = (mediaArray) => {
-   
     return mediaArray.map((mediaItem, index) => {
-      const mediaType = mediaItem.type.split("/")[0]; 
+      const mediaType = mediaItem.type.split("/")[0];
 
       switch (mediaType) {
         case "image":
@@ -37,7 +36,7 @@ function Card({ card, editCard, deleteCard }) {
               Your browser does not support the video tag.
             </video>
           );
-        case "application": 
+        case "application":
           return (
             <div key={index} className="card-media-ppt">
               <img
@@ -56,7 +55,7 @@ function Card({ card, editCard, deleteCard }) {
 
   return (
     <>
-      <div className="card-container">
+      <div className="card-container" style={{ width: "600px", height: "400px" }}>
         <h3
           className="card-title"
           dangerouslySetInnerHTML={createMarkup(card.title)}
@@ -64,25 +63,28 @@ function Card({ card, editCard, deleteCard }) {
         {Array.isArray(card.media) && card.media.length ? (
           renderMediaPreview(card.media)
         ) : (
-          <div>No Media Provided</div>
+          <div style={{ margin: '0 auto' }}>No Media Provided</div>
+
         )}
         <div
           className="card-description"
           dangerouslySetInnerHTML={createMarkup(card.description)}
         ></div>
         <div>
-          <button onClick={toggleModal} className="card-button">
-            View Details
-          </button>
-          <button
-            onClick={() => editCard(card.id)}
-            className="card-button card-button-edit"
-          >
-            Edit
-          </button>
-          <button onClick={() => deleteCard(card.id)} className="card-button">
-            Delete
-          </button>
+        <button onClick={toggleModal} className="card-button" style={{ marginRight: 10, backgroundColor: "white", color: "black", borderRadius: "3px", padding: "6px 12px", fontSize: "12px" }}>
+  View Details
+</button>
+
+<button onClick={() => editCard(card.id)} className="card-button card-button-edit" style={{ backgroundColor: "white", color: "black", borderRadius: "3px", padding: "6px 12px", fontSize: "12px" }}>
+  Edit
+</button>
+
+<button onClick={() => deleteCard(card.id)} className="card-button" style={{ backgroundColor: "red", color: "#ffffff", borderRadius: "3px", padding: "6px 12px", fontSize: "12px" }}>
+  Delete
+</button>
+
+
+
         </div>
       </div>
 

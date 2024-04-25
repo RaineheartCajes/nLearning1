@@ -4,6 +4,7 @@ import CardsGrid from "./CardsGrid";
 import { Card, Button } from "@mui/material";
 import "./ck-create-content.css";
 import { useParams } from "react-router-dom";
+import SaveIcon from '@mui/icons-material/Save';
 
 function CKCreateContent() {
   const [cards, setCards] = useState([]);
@@ -66,8 +67,9 @@ function CKCreateContent() {
         <CardsGrid cards={cards} editCard={editCard} deleteCard={deleteCard} />
         <Button
           variant="contained"
-          sx={{ display: "flex", margin: "auto" }}
+          sx={{ display: "flex", marginLeft: "600px", mb: 2, bgcolor: "#e11d48"}}
           onClick={saveContent}
+          startIcon={<SaveIcon/>}
         >
           Save Content
         </Button>

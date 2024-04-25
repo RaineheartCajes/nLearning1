@@ -145,7 +145,7 @@ export default function Settings() {
               style={{ fontWeight: "bold" }}
               size="lg"
             >
-              Personal info
+              Personal Information
             </Typography>
             <Typography level="body-sm">
               Customize how your profile information will appear to the
@@ -278,7 +278,7 @@ export default function Settings() {
               <Button size="sm" variant="outlined" color="neutral">
                 Cancel
               </Button>
-              <Button size="sm" variant="solid" onClick={handleSubmit}>
+              <Button size="sm"  sx={{ bgcolor: "#e11d48"}} onClick={handleSubmit}>
                 Submit
               </Button>
             </CardActions>

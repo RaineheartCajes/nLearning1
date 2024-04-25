@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import Button from "@mui/material/Button";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const ViewCarousel = ({ notes }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -46,14 +49,15 @@ const ViewCarousel = ({ notes }) => {
         })}
       </div>
       <div className="carousel-buttons">
-        <button
-          className="button-arrow"
-          onClick={() => {
-            updateIndex(activeIndex - 1);
-          }}
-        >
-          <span className="material-symbols-outlined">arrow_back_ios</span>{" "}
-        </button>
+      <Button
+  className="button-arrow"
+  onClick={() => {
+    updateIndex(activeIndex - 1);
+  }}
+  startIcon={<ArrowBackIosIcon />}
+>
+  Back
+</Button>
         <div className="indicators">
           {items.map((_, index) => (
             <button
@@ -75,14 +79,15 @@ const ViewCarousel = ({ notes }) => {
             </button>
           ))}
         </div>
-        <button
-          className="button-arrow"
-          onClick={() => {
-            updateIndex(activeIndex + 1);
-          }}
-        >
-          <span className="material-symbols-outlined">arrow_forward_ios</span>
-        </button>
+        <Button
+  className="button-arrow"
+  onClick={() => {
+    updateIndex(activeIndex + 1);
+  }}
+  endIcon={<ArrowForwardIosIcon />}
+>
+  Next
+</Button>
       </div>
     </div>
   );

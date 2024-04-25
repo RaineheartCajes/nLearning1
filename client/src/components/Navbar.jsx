@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom"; // Import Link from React Router
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,33 +12,31 @@ import { useNavigate } from "react-router-dom";
 import { MdAccountCircle } from "react-icons/md";
 import { useAuth } from "../contexts/auth-context";
 import axios from "axios"; 
+import Swal from 'sweetalert2';
 
 export default function Navbar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const { user, isAuthenticated, logout, token } = useAuth(); 
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    
     if (isAuthenticated && token) {
       axios
         .get("http://localhost:3001/auth/username", {
-          
           headers: {
             Authorization: token,
           },
         })
         .then((response) => {
-          
           setUsername(response.data.username);
         })
         .catch((error) => {
           console.error("Fetching username failed:", error);
-          
         });
     }
   }, [isAuthenticated, token]); 
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -52,8 +51,25 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
-    logout();
-    navigate("/");
+    Swal.fire({
+      title: 'Are you sure you want to logout?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, logout'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+        Swal.fire({
+          icon: 'success',
+          title: 'Logout Success',
+          showConfirmButton: false,
+          timer: 1500 // Auto close the success message after 1.5 seconds
+        });
+        navigate("/"); // Assuming you are using navigate from react-router-dom to redirect
+      }
+    });
   };
 
   return (
@@ -84,7 +100,7 @@ export default function Navbar() {
                 >
                   <MdAccountCircle />
                 </IconButton>
-                <Typography
+                {/* <Typography
                   variant="h6"
                   component="div"
                   sx={{
@@ -95,7 +111,7 @@ export default function Navbar() {
                   }}
                 >
                   {username || "User Name"} 
-                </Typography>
+                </Typography> */}
               </div>
               <Menu
                 id="menu-appbar"
@@ -105,9 +121,34 @@ export default function Navbar() {
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    borderRadius: 8, 
+                    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)", 
+                    minWidth: 180,
+                  },
+                }}
               >
-                <MenuItem onClick={handleClick}>My account</MenuItem>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                <div style={{ padding: "8px 16px", fontWeight: "bold", pointerEvents: "none" }}>
+                  {username}
+                </div>
+                <hr style={{ margin: 0 }} />
+                <MenuItem
+                  component={Link}
+                  to="/dashboard/settings"
+                  style={{ padding: "8px 16px" }}
+                >
+                  My account
+                </MenuItem>
+                <MenuItem
+                  onClick={handleLogout}
+                  style={{
+                    padding: "8px 16px",
+                    color: "#f44336", 
+                  }}
+                >
+                  Logout
+                </MenuItem>
               </Menu>
             </div>
           )}

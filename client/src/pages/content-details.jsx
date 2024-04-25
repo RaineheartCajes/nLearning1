@@ -1,76 +1,68 @@
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  Box,
+  Button,
   Card,
   CardContent,
-  Box,
-  Typography,
-  Button,
-  Divider,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
-  Select,
+  Divider,
   MenuItem,
+  Select,
+  TextField,
+  Typography,
 } from "@mui/material";
-import "../assets/styles/ExamRoutes.css";
-import ReturnDashboard from "../components/ReturnDashboard";
-import { useEffect, useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaEdit } from "react-icons/fa";
 import axios from "axios";
+import ReturnDashboard from "../components/ReturnDashboard";
+import "../assets/styles/ExamRoutes.css";
+import AddIcon from '@mui/icons-material/Add';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
-function ContentDetailsPage() {
+
+const ContentDetailsPage = () => {
   const { examId } = useParams();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [exams, setExams] = useState([]);
-  const [examList, setExamList] = useState(exams);
-  const [selectedDepartment, setSelectedDepartment] = useState(""); 
-  const [numberOfParticipants, setNumberOfParticipants] = useState(""); 
+  const [examList, setExamList] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [numberOfParticipants, setNumberOfParticipants] = useState("");
 
   useEffect(() => {
-    getExams().then((response) => {});
+    getExams();
   }, []);
 
   const getExams = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3001/exam/content/exam-title`
-      );
+      const response = await axios.get(`http://localhost:3001/exam/content/exam-title`);
       if (response.data !== undefined) {
         setExams(response.data);
         setExamList(response.data);
       }
     } catch (error) {
-      
-      console.error(
-        "Error getting exams:",
-        error.response ? error.response.data.error : error.message
-      );
+      console.error("Error getting exams:", error.response ? error.response.data.error : error.message);
     }
   };
+
   const handleAssignExam = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(
-        `http://localhost:3001/content/assign-exam/${examId}`,
-        {
-          assignedDepartment: selectedDepartment,
-          numberOfParticipants: numberOfParticipants, 
-        }
-      );
+      const response = await axios.post(`http://localhost:3001/content/assign-exam/${examId}`, {
+        assignedDepartment: selectedDepartment,
+        numberOfParticipants: numberOfParticipants,
+      });
 
-      
       handleCloseModal();
-      navigate(`/dashboard/create-content/${examId}`); 
+      navigate(`/dashboard/create-content/${examId}`);
     } catch (error) {
-      console.error(
-        "Error assigning exam:",
-        error.response ? error.response.data.error : error.message
-      );
+      console.error("Error assigning exam:", error.response ? error.response.data.error : error.message);
     }
   };
 
@@ -81,6 +73,7 @@ function ContentDetailsPage() {
       state: { details: selectedExam },
     });
   };
+
   const handleCreateAssignClick = () => {
     setOpenModal(true);
   };
@@ -93,23 +86,17 @@ function ContentDetailsPage() {
 
   const handleDeleteExam = async () => {
     try {
-      const response = await axios.delete(
-        `http://localhost:3001/exam/delete-exam/${examId}`
-      );
-      
+      await axios.delete(`http://localhost:3001/exam/delete-exam/${examId}`);
       navigate("/dashboard/create-content");
     } catch (error) {
-      console.error(
-        "Error deleting exam:",
-        error.response ? error.response.data.error : error.message
-      );
+      console.error("Error deleting exam:", error.response ? error.response.data.error : error.message);
     }
   };
 
   const handleEditExam = () => {
     navigate(`/dashboard/exams/${examId}/edit`);
-    
   };
+
   const handleCreateContentClick = () => {
     navigate(`/dashboard/create-content/${examId}/create-review`, {
       state: { examId: examId },
@@ -117,50 +104,34 @@ function ContentDetailsPage() {
   };
 
   if (!selectedExam) {
-    return (
-      <p>
-        Loading exam {examId} and {exams._id}
-      </p>
-    );
+    return <p>Loading exam {examId}</p>;
   }
-
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
 
   return (
     <>
       <div className="exam-details--wrapper">
-        <Card sx={{ m: 3, height: "80vh" }}>
+        <Card sx={{ m: 3, height: "50vh"}}>
           <CardContent>
-            <Box style={{ display: "flex", justifyContent: "space-between" }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <ReturnDashboard />
-              <div>
+              <Box sx={{ display: "flex" }}>
                 <Button
                   variant="contained"
                   className="exam-details--button"
-                  sx={{
-                    textTransform: "capitalize",
-                    mr: 2,
-                    borderRadius: "0rem",
-                  }}
                   onClick={handleDeleteExam}
+                  startIcon={<RiDeleteBin6Line />}
                 >
-                  <RiDeleteBin6Line /> &nbsp; Delete
+                  Delete
                 </Button>
                 {/* <Button
                   variant="contained"
                   className="exam-details--button"
-                  sx={{ textTransform: "capitalize", borderRadius: "0rem" }}
                   onClick={handleEditExam}
+                  startIcon={<FaEdit />}
                 >
-                  <FaEdit /> &nbsp; Edit
+                  Edit
                 </Button> */}
-              </div>
+              </Box>
             </Box>
 
             <Typography variant="h5" sx={{ mt: 2 }}>
@@ -171,95 +142,51 @@ function ContentDetailsPage() {
               {selectedExam.description}
             </Typography>
 
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              {/* <Typography variant="body2">
-                Status: {selectedExam.status}
-              </Typography> */}
-
-              {/* <Typography variant="body2">
-                Created: {selectedExam.createdAt}
-              </Typography> */}
-            </Box>
             <Divider />
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                py: 2,
-                margin: 7,
-              }}
-            >
-              <Button
-                className="brand-red-bg "
-                sx={{
-                  textTransform: "capitalize",
-                  px: 3,
-                  py: 2,
-                  mx: 5,
-                }}
-                style={{
-                  fontSize: "20px",
-                  maxWidth: "200px",
-                  maxHeight: "100px",
-                  minWidth: "200px",
-                  minHeight: "100px",
-                }}
-                onClick={handleCreateContentClick}
-              >
-                {" "}
-                Create Review
-              </Button>
-              <Button
-                className="brand-red-bg"
-                sx={{ textTransform: "capitalize", px: 3, py: 2, mx: 5 }}
-                onClick={handleTakeExamClick}
-                style={{
-                  fontSize: "20px",
-                  maxWidth: "200px",
-                  maxHeight: "100px",
-                  minWidth: "200px",
-                  minHeight: "100px",
-                }}
-              >
-                {" "}
-                Create Exam
-              </Button>
-              <Button
-                className="brand-red-bg"
-                sx={{ textTransform: "capitalize", px: 3, py: 2, mx: 5 }}
-                onClick={handleCreateAssignClick}
-                style={{
-                  fontSize: "20px",
-                  maxWidth: "200px",
-                  maxHeight: "100px",
-                  minWidth: "200px",
-                  minHeight: "100px",
-                }}
-              >
-                {" "}
-                Assign Exam
-              </Button>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+            <Button
+        variant="contained"
+        color="primary"
+        startIcon={<AddIcon />}
+        sx={{ bgcolor: "#e11d48", height:"50px", width:"200px"}}
+        onClick={handleCreateContentClick}
+    >
+        Create Review
+    </Button>
+
+    <Button
+        variant="contained"
+        color="primary"
+        startIcon={<AssessmentIcon />}
+        sx={{ bgcolor: "#e11d48", marginLeft:"50px", height:"50px", width:"200px"}}
+        onClick={handleTakeExamClick}
+    >
+        Create Exam
+    </Button>
+
+    <Button
+        variant="contained"
+        color="primary"
+        startIcon={<AssignmentIcon />}
+        sx={{ bgcolor: "#e11d48", marginLeft:"50px", height:"50px", width:"200px"}}
+        onClick={handleCreateAssignClick}
+    >
+        Assign Exam
+    </Button>
             </Box>
           </CardContent>
         </Card>
 
-        <Dialog
-          open={openModal}
-          onClose={handleCloseModal}
-          sx={{ width: "auto", maxWidth: "none" }}
-        >
+        <Dialog open={openModal} onClose={() => setOpenModal(false)} PaperProps={{ style: { width: '70%' } }}>
           <form onSubmit={handleAssignExam}>
-            <DialogTitle>Assign</DialogTitle>
+            <DialogTitle>Assign Exam</DialogTitle>
             <DialogContent>
+              Department
               <Select
-                label="Department"
-                placeholder="Select Department"
-                name="department"
-                value={selectedDepartment} // Add this line to set the selected value
-                onChange={(e) => setSelectedDepartment(e.target.value)} // Add this line to handle selection changes
+                label=""
+                value={selectedDepartment}
+                onChange={(e) => setSelectedDepartment(e.target.value)}
                 fullWidth
-                margin="dense"
-                sx={{ width: "300px" }}
               >
                 <MenuItem value="Technology">Technology</MenuItem>
                 <MenuItem value="Production">Production</MenuItem>
@@ -270,26 +197,21 @@ function ContentDetailsPage() {
             <DialogContent>
               <TextField
                 label="Number of Participants"
-                name="numberOfParticipants"
                 type="number"
                 value={numberOfParticipants}
                 onChange={(e) => setNumberOfParticipants(e.target.value)}
                 fullWidth
-                margin="dense"
-                sx={{ width: "300px" }}
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCloseModal}>Cancel</Button>
-              <Button type="submit" color="primary">
-                Submit
-              </Button>
+              <Button onClick={() => setOpenModal(false)}>Cancel</Button>
+              <Button type="submit" color="primary">Submit</Button>
             </DialogActions>
           </form>
         </Dialog>
       </div>
     </>
   );
-}
+};
 
 export default ContentDetailsPage;

@@ -9,6 +9,7 @@ function Dashboard() {
 
   return (
     <>
+
       <div className="dashboard-content">
         <Navbar />
 
