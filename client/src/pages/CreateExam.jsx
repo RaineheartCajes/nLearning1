@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from "@mui/icons-material/Add";
+import Swal from 'sweetalert2';
 
 
 const CreateExam = () => {
@@ -91,9 +92,11 @@ const CreateExam = () => {
       setSelectedChoice(null);
       setErrorMessage("");
     } else {
-      setErrorMessage(
-        "Please enter a question, choices, and select a correct answer before saving."
-      );
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please enter a question, choices, and select a correct answer before saving.',
+      });
     }
   };
 
@@ -129,9 +132,11 @@ const CreateExam = () => {
       setEditingIndex(null);
       setErrorMessage("");
     } else {
-      setErrorMessage(
-        "Please enter a question, choices, and select a correct answer before updating."
-      );
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: "Please enter a question, choices, and select a correct answer before updating."
+    });
     }
   };
 
@@ -306,11 +311,15 @@ const CreateExam = () => {
                           type="checkbox"
                           checked={choice.isCorrect}
                           onChange={() => handleMarkAsCorrect(index)}
+                          style={{
+                            marginRight: "8px",
+                          }}
                         />
+
                         <label htmlFor={`choice-${index}`}>{choice.text}</label>
                         <FiEdit
                           onClick={() => handleEditChoice(index)}
-                          style={{ m: 2 }}
+                          style={{marginRight: "2px", marginLeft: "400px" }}
                         />
                         <FiTrash2 onClick={() => handleDeleteChoice(index)} />
                       </div>
@@ -347,11 +356,12 @@ const CreateExam = () => {
                   //color: "#fff", // Changed text color to white
                   border: "1px solid", // Removed border
                   cursor: "pointer", // Added pointer cursor
-                  marginLeft: "200px",
-                  marginRight: "150px"
+                  //marginLeft: "300px",
+                  //marginRight: "150px"
                 }}
               >
-<AddIcon style={{ fontSize: "16px", marginRight: "4px" }} />                Add Choice
+                <AddIcon style={{ fontSize: "16px", marginRight: "4px" }} /> Add
+                Choice
               </button>
 
               {errorMessage && (
@@ -388,11 +398,12 @@ const CreateExam = () => {
                     //color: "#fff", // Changed text color to white
                     border: "1px solid", // Removed border
                     cursor: "pointer", // Added pointer cursor
-                    marginLeft: "-110px",
+                    //marginLeft: "-110px",
                   }}
                 >
-                  <AddIcon style={{ fontSize: "16px", marginRight: "4px" }} />                Save Question
-              </button>
+                  <AddIcon style={{ fontSize: "16px", marginRight: "4px" }} />{" "}
+                  Save Question
+                </button>
               )}
             </div>
           )}

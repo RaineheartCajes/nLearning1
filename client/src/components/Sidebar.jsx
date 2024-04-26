@@ -63,7 +63,7 @@ export default function Sidebar() {
                     {index === 3 && <IoIosPeople />}
                     {index === 4 && <CiSettings />}
                   </ListItemIcon>
-                  <ListItemText primary={text} className="sidebar-text" />
+                  <ListItemText primary={text} className="sidebar-text"/>
                 </ListItemButton>
               </ListItem>
             ))}
