@@ -6,8 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from "@mui/icons-material/Add";
-import Swal from 'sweetalert2';
-
+import Swal from "sweetalert2";
 
 const CreateExam = () => {
   const navigate = useNavigate();
@@ -93,9 +92,9 @@ const CreateExam = () => {
       setErrorMessage("");
     } else {
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Please enter a question, choices, and select a correct answer before saving.',
+        icon: "error",
+        title: "Error",
+        text: "Please enter a question, choices, and select a correct answer before saving.",
       });
     }
   };
@@ -133,10 +132,10 @@ const CreateExam = () => {
       setErrorMessage("");
     } else {
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: "Please enter a question, choices, and select a correct answer before updating."
-    });
+        icon: "error",
+        title: "Error",
+        text: "Please enter a question, choices, and select a correct answer before updating.",
+      });
     }
   };
 
@@ -319,7 +318,7 @@ const CreateExam = () => {
                         <label htmlFor={`choice-${index}`}>{choice.text}</label>
                         <FiEdit
                           onClick={() => handleEditChoice(index)}
-                          style={{marginRight: "2px", marginLeft: "400px" }}
+                          style={{ marginRight: "2px", marginLeft: "400px" }}
                         />
                         <FiTrash2 onClick={() => handleDeleteChoice(index)} />
                       </div>
@@ -372,6 +371,7 @@ const CreateExam = () => {
               {editingIndex !== null ? (
                 <div className="edit-questionbtn">
                   <button
+                    style={{ fontSize: "16px", height: "50px", width: "150px" }}
                     className="exam-button"
                     onClick={handleUpdateQuestion}
                   >

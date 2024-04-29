@@ -11,31 +11,50 @@ import NTS_Logo from "../assets/images/NTS_Logo.png";
 import { useNavigate } from "react-router-dom";
 import { MdAccountCircle } from "react-icons/md";
 import { useAuth } from "../contexts/auth-context";
-import axios from "axios"; 
-import Swal from 'sweetalert2';
+import axios from "axios";
+import Swal from "sweetalert2";
+import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const { user, isAuthenticated, logout, token } = useAuth(); 
+  const { user, isAuthenticated, logout, token } = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    if (isAuthenticated && token) {
-      axios
-        .get("http://localhost:3001/auth/username", {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((response) => {
-          setUsername(response.data.username);
-        })
-        .catch((error) => {
-          console.error("Fetching username failed:", error);
-        });
-    }
-  }, [isAuthenticated, token]); 
+    const fetchData = async () => {
+      if (isAuthenticated && token) {
+        axios
+          .get("http://localhost:3001/auth/username", {
+            headers: {
+              Authorization: token,
+            },
+          })
+          .then((response) => {
+            setUsername(response.data.username);
+          })
+          .catch((error) => {
+            console.error("Fetching username failed:", error);
+          });
+      }
+
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/settings/profile",
+          {
+            headers: { Authorization: token },
+          }
+        );
+        setUserData(response.data);
+        setUser(response.data);
+        setUserType(response.data.user_type);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
+  }, [isAuthenticated, token]);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -52,25 +71,33 @@ export default function Navbar() {
 
   const handleLogout = () => {
     Swal.fire({
-      title: 'Are you sure you want to logout?',
-      icon: 'warning',
+      title: "Are you sure you want to logout?",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, logout'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, logout",
     }).then((result) => {
       if (result.isConfirmed) {
         logout();
         Swal.fire({
-          icon: 'success',
-          title: 'Logout Success',
+          icon: "success",
+          title: "Logout Success",
           showConfirmButton: false,
-          timer: 1500 // Auto close the success message after 1.5 seconds
+          timer: 1500, // Auto close the success message after 1.5 seconds
         });
         navigate("/"); // Assuming you are using navigate from react-router-dom to redirect
       }
     });
   };
+  const [userData, setUserData] = useState({
+    username: user?.username || "",
+    user_type: user?.user_type || "",
+    user_role: user?.user_role || "",
+    email: user?.email || "",
+    department: user?.department || "",
+    imageUrl: user?.imageUrl || "",
+  });
 
   return (
     <Box sx={{ width: "4rem", marginBottom: "3rem" }}>
@@ -98,8 +125,20 @@ export default function Navbar() {
                   aria-haspopup="true"
                   color="inherit"
                 >
-                  <MdAccountCircle />
+                  {userData.imageUrl && (
+                    <img
+                      src={userData.imageUrl}
+                      alt="Profile"
+                      style={{
+                        width: "36px", // Adjust width as needed
+                        height: "36px", // Adjust height as needed
+                        borderRadius: "50%", // Ensure it's a circle
+                        objectFit: "cover", // Maintain aspect ratio
+                      }}
+                    />
+                  )}
                 </IconButton>
+
                 {/* <Typography
                   variant="h6"
                   component="div"
@@ -123,15 +162,30 @@ export default function Navbar() {
                 onClose={handleClose}
                 PaperProps={{
                   style: {
-                    borderRadius: 8, 
-                    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)", 
+                    borderRadius: 8,
+                    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
                     minWidth: 180,
                   },
                 }}
               >
-                <div style={{ padding: "8px 16px", fontWeight: "bold", pointerEvents: "none" }}>
-                  {username}
+                <div
+                  style={{
+                    padding: "8px 16px",
+                    fontWeight: "bold",
+                    pointerEvents: "none",
+                    color: "Black",
+                    borderRadius: "4px",
+                    display: "flex", // Ensuring icon and text are displayed in a row
+                    alignItems: "center", // Centering the content vertically
+                  }}
+                >
+                  Hi {username}
+                  <SentimentSatisfiedAltIcon
+                    style={{ marginLeft: "80px", transform: "rotate(30deg)" }}
+                  />{" "}
+                  {/* Icon */}
                 </div>
+
                 <hr style={{ margin: 0 }} />
                 <MenuItem
                   component={Link}
@@ -144,7 +198,7 @@ export default function Navbar() {
                   onClick={handleLogout}
                   style={{
                     padding: "8px 16px",
-                    color: "#f44336", 
+                    color: "#f44336",
                   }}
                 >
                   Logout
