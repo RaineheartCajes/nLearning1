@@ -9,7 +9,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import NTS_Logo from "../assets/images/NTS_Logo.png";
 import { useNavigate } from "react-router-dom";
-import { MdAccountCircle } from "react-icons/md";
+import { MdAccountCircle, MdExitToApp } from "react-icons/md"; // Import MdExitToApp icon
 import { useAuth } from "../contexts/auth-context";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -170,7 +170,7 @@ export default function Navbar() {
                   to="/dashboard/settings"
                   style={{ padding: "8px 16px" }}
                 >
-                  My account
+                  <MdAccountCircle style={{ marginRight: "8px" }} /> My Account
                 </MenuItem>
                 <MenuItem
                   onClick={handleLogout}
@@ -179,7 +179,7 @@ export default function Navbar() {
                     color: "#f44336",
                   }}
                 >
-                  Logout
+                  <MdExitToApp style={{ marginRight: "8px" }} /> Logout
                 </MenuItem>
               </Menu>
             </div>
