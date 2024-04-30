@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Import Link from React Router
+import { Link } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -20,41 +20,42 @@ export default function Navbar() {
   const { user, isAuthenticated, logout, token } = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
+  const [userData, setUserData] = useState({
+    username: "",
+    user_type: "",
+    user_role: "",
+    email: "",
+    department: "",
+    imageUrl: "",
+  });
 
   useEffect(() => {
     const fetchData = async () => {
-      if (isAuthenticated && token) {
-        axios
-          .get("http://localhost:3001/auth/username", {
+      try {
+        if (isAuthenticated && token) {
+          const usernameResponse = await axios.get("http://localhost:3001/auth/username", {
             headers: {
               Authorization: token,
             },
-          })
-          .then((response) => {
-            setUsername(response.data.username);
-          })
-          .catch((error) => {
-            console.error("Fetching username failed:", error);
           });
-      }
-
-      try {
-        const response = await axios.get(
-          "http://localhost:3001/settings/profile",
-          {
-            headers: { Authorization: token },
-          }
-        );
-        setUserData(response.data);
-        setUser(response.data);
-        setUserType(response.data.user_type);
+          setUsername(usernameResponse.data.username);
+        }
+  
+        const profileResponse = await axios.get("http://localhost:3001/settings/profile", {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setUserData(profileResponse.data);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching data:", error);
+        // Handle error appropriately, like showing an error message to the user
       }
     };
-
-    fetchData();
-  }, [isAuthenticated, token]);
+  
+    fetchData(); // Call fetchData when isAuthenticated, token, or userData changes
+  }, [isAuthenticated, token, userData]);
+  
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -84,20 +85,12 @@ export default function Navbar() {
           icon: "success",
           title: "Logout Success",
           showConfirmButton: false,
-          timer: 1500, // Auto close the success message after 1.5 seconds
+          timer: 1500,
         });
-        navigate("/"); // Assuming you are using navigate from react-router-dom to redirect
+        navigate("/");
       }
     });
   };
-  const [userData, setUserData] = useState({
-    username: user?.username || "",
-    user_type: user?.user_type || "",
-    user_role: user?.user_role || "",
-    email: user?.email || "",
-    department: user?.department || "",
-    imageUrl: user?.imageUrl || "",
-  });
 
   return (
     <Box sx={{ width: "4rem", marginBottom: "3rem" }}>
@@ -119,7 +112,7 @@ export default function Navbar() {
             <div>
               <div className="user-details--wrapper" onClick={handleMenu}>
                 <IconButton
-                  size="large"
+                  size="small"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
@@ -130,27 +123,14 @@ export default function Navbar() {
                       src={userData.imageUrl}
                       alt="Profile"
                       style={{
-                        width: "36px", // Adjust width as needed
-                        height: "36px", // Adjust height as needed
-                        borderRadius: "50%", // Ensure it's a circle
-                        objectFit: "cover", // Maintain aspect ratio
+                        width: "36px",
+                        height: "36px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
                       }}
                     />
                   )}
                 </IconButton>
-
-                {/* <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{
-                    flexGrow: 1,
-                    ml: "1rem",
-                    display: "flex",
-                    alignSelf: "center",
-                  }}
-                >
-                  {username || "User Name"} 
-                </Typography> */}
               </div>
               <Menu
                 id="menu-appbar"
@@ -175,17 +155,15 @@ export default function Navbar() {
                     pointerEvents: "none",
                     color: "Black",
                     borderRadius: "4px",
-                    display: "flex", // Ensuring icon and text are displayed in a row
-                    alignItems: "center", // Centering the content vertically
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
                   Hi {username}
                   <SentimentSatisfiedAltIcon
                     style={{ marginLeft: "80px", transform: "rotate(30deg)" }}
-                  />{" "}
-                  {/* Icon */}
+                  />
                 </div>
-
                 <hr style={{ margin: 0 }} />
                 <MenuItem
                   component={Link}
