@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import NTS_Logo from "../../assets/images/NTS_Logo.png";
 import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useAuth } from "../../contexts/auth-context"; 
+import { useAuth } from "../../contexts/auth-context";
 
 const LoginSchema = Yup.object().shape({
   Username: Yup.string().required("Username is required"),
@@ -23,9 +17,9 @@ const LoginSchema = Yup.object().shape({
 });
 
 const LoginForm = () => {
-  const [openDialog, setOpenDialog] = useState(false);
   const [loginAttempts, setLoginAttempts] = useState(0);
   const [locked, setLocked] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
   const {
     register,
     handleSubmit,
@@ -34,7 +28,7 @@ const LoginForm = () => {
     resolver: yupResolver(LoginSchema),
   });
   const navigate = useNavigate();
-  const { login } = useAuth(); 
+  const { login } = useAuth();
 
   useEffect(() => {
     if (loginAttempts >= 5) {
@@ -42,14 +36,14 @@ const LoginForm = () => {
       const timer = setTimeout(() => {
         setLocked(false);
         setLoginAttempts(0);
-      }, 300000); 
+      }, 300000);
       return () => clearTimeout(timer);
     }
   }, [loginAttempts]);
 
   const loginEvent = async (data) => {
     if (locked) {
-      setOpenDialog(true);
+      showLockedAlert();
       return;
     }
 
@@ -59,20 +53,70 @@ const LoginForm = () => {
         password: data.password,
       });
 
-     
       login(response.data, response.data.token);
-
-      
       navigate("/dashboard");
+      setLoginSuccess(true);
+
+      // Display SweetAlert success message without OK button
+      Swal.fire({
+        title: "Success!",
+        text: "Login successful!",
+        icon: "success",
+        timer: 2000, // Set the duration of the message
+        timerProgressBar: true,
+        showConfirmButton: false, // Remove the OK button
+        onClose: () => {
+          setLoginSuccess(false); // Reset login success state after message closes
+        }
+      });
     } catch (error) {
       console.error("Login error:", error.message);
       setLoginAttempts((prevAttempts) => prevAttempts + 1);
-      setOpenDialog(true);
+      showLoginErrorAlert();
     }
   };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
+  const showLockedAlert = () => {
+    let timerInterval;
+  
+    Swal.fire({
+      title: "Incorrect Password",
+      html: "Please try again in <b></b> seconds.",
+      icon: "error",
+      timer: 300000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+        const timer = Swal.getPopup().querySelector("b");
+        timerInterval = setInterval(() => {
+          timer.textContent = `${Math.ceil(Swal.getTimerLeft() / 1000)}`;
+        }, 100);
+      },
+      willClose: () => {
+        clearInterval(timerInterval);
+        const button = document.querySelector(".auth-button");
+        button.disabled = true;
+        button.classList.add("disabled");
+        setTimeout(() => {
+          button.disabled = false;
+          button.classList.remove("disabled");
+        }, 300000);
+      }
+    }).then((result) => {
+      if (result.dismiss === Swal.DismissReason.timer) {
+        console.log("I was closed by the timer");
+      }
+    });
+  };
+   
+
+  const showLoginErrorAlert = () => {
+    Swal.fire({
+      title: "Error",
+      text: "Invalid username or password. Please try again.",
+      icon: "error",
+      confirmButtonText: "OK",
+    });
   };
 
   return (
@@ -81,6 +125,11 @@ const LoginForm = () => {
         <form onSubmit={handleSubmit(loginEvent)} className="login-form">
           <img src={NTS_Logo} alt="Company Logo" className="logo" />
           <div className="signin--header">Sign In</div>
+          {loginSuccess && (
+            <p style={{ color: "green", textAlign: "center" }}>
+              Login successful!
+            </p>
+          )}
           <div className="fields-wrapper">
             <div className="form-label">Username</div>
             <input
@@ -99,7 +148,7 @@ const LoginForm = () => {
             <div className="error-message">{errors.password?.message}</div>
           </div>
           <Button type="submit" className="auth-button" disabled={isSubmitting}>
-            Login
+            {isSubmitting ? "Logging in..." : "Login"}
           </Button>
           <div className="end-footer">
             <p className="forgot-password">
@@ -112,25 +161,6 @@ const LoginForm = () => {
           </div>
         </form>
       </div>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Error</DialogTitle>
-        <DialogContent>
-          {locked ? (
-            <DialogContentText>
-              Please try again in 5 minutes.
-            </DialogContentText>
-          ) : (
-            <DialogContentText>
-              Username or Password is correct.
-            </DialogContentText>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
     </div>
   );
 };

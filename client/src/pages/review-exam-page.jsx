@@ -4,6 +4,9 @@ import "../assets/styles/review-exam-page.css";
 import Navbar from "../components/Navbar";
 import { useLocation, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
+import QuizIcon from "@mui/icons-material/Quiz";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const ReviewExamPage = () => {
   const location = useLocation();
@@ -11,11 +14,6 @@ const ReviewExamPage = () => {
   const reviewState = location.state;
   const [activeIndex, setActiveIndex] = useState(0);
   const [items, setItems] = useState([]);
-
-  useEffect(() => {
-    if (reviewState?.retake) {
-    }
-  }, [reviewState, examId]);
 
   useEffect(() => {
     try {
@@ -48,6 +46,7 @@ const ReviewExamPage = () => {
 
     setActiveIndex(newIndex);
   };
+  
   return (
     <>
       <Navbar />
@@ -73,15 +72,13 @@ const ReviewExamPage = () => {
             })}
           </div>
           <div className="carousel-buttons">
-            <button
+            <Button
               className="button-arrow"
               onClick={() => {
                 updateIndex(activeIndex - 1);
               }}
-            >
-              <span className="material-symbols-outlined">arrow_back_ios</span>{" "}
-            </button>
-
+              startIcon={<ArrowBackIosIcon />}
+            />
             <div className="indicators">
               {items.map((item, index) => {
                 return (
@@ -107,38 +104,40 @@ const ReviewExamPage = () => {
                 );
               })}
             </div>
-            <button
+            <Button
               className="button-arrow"
               onClick={() => {
                 updateIndex(activeIndex + 1);
               }}
-            >
-              <span className="material-symbols-outlined">
-                arrow_forward_ios
-              </span>
-              <Button
-                href={
-                  isLastSlide ? `/dashboard/exams/${examId}/take-exam` : "#"
-                }
-                className={`brand-red-bg ${!isLastSlide && "disabled"}`}
-                sx={{
-                  textTransform: "capitalize",
-                  px: 3,
-                  py: 2,
-                  mx: 0.5,
-                  opacity: isLastSlide ? 1 : 0.5,
-                  cursor: isLastSlide ? "pointer" : "not-allowed",
-                }}
-                disabled={!isLastSlide}
-              >
-                Take Exam
-              </Button>
-            </button>
+              endIcon={<ArrowForwardIosIcon />}
+            />
+            <div className="take-exam-button">
+          <Button
+            href={isLastSlide ? `/dashboard/exams/${examId}/take-exam` : "#"}
+            className={`brand-red-bg ${!isLastSlide && "disabled"}`}
+            sx={{
+              textTransform: "capitalize",
+              px: 3,
+              py: 2,
+              position: "absolute",
+              //marginTop: "550px",
+              opacity: isLastSlide ? 1 : 0.5,
+              cursor: isLastSlide ? "pointer" : "not-allowed",
+            }}
+            disabled={!isLastSlide}
+            startIcon={<QuizIcon />}
+          >
+            Take Exams
+          </Button>
+        </div>
           </div>
         </div>
       </div>
+      {/* Take Exam button */}
+      
     </>
   );
 };
 
 export default ReviewExamPage;
+  

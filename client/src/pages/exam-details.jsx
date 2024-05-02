@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaEdit } from "react-icons/fa";
 import axios from "axios";
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import QuizIcon from '@mui/icons-material/Quiz';
+import PlagiarismIcon from '@mui/icons-material/Plagiarism';
 
 function ExamDetailsPage() {
   const { examId } = useParams();
@@ -114,22 +117,23 @@ function ExamDetailsPage() {
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "flex-end", py: 2 }}>
-              <Button
-                className="brand-red-bg"
-                sx={{ textTransform: "capitalize", px: 3, py: 2, mx: 0.5 }}
-                onClick={handleReviewClick}
-              >
-                {" "}
-                Start Reviewing
-              </Button>
-              <Button
-                className="brand-red-bg"
-                sx={{ textTransform: "capitalize", px: 3, py: 2, mx: 0.5 }}
-                onClick={handleTakeExamClick}
-              >
-                {" "}
-                Take Exam
-              </Button>
+            <Button
+  className="brand-red-bg"
+  sx={{ textTransform: "capitalize", px: 3, py: 2, mx: 0.5 }}
+  onClick={handleReviewClick}
+  startIcon={<PlagiarismIcon />} 
+>
+  Start Reviewing
+</Button>
+
+<Button
+  className="brand-red-bg"
+  sx={{ textTransform: "capitalize", px: 3, py: 2, mx: 0.5 }}
+  onClick={handleTakeExamClick}
+  startIcon={<QuizIcon/>}
+>
+  Take Exam
+</Button>
             </Box>
           </CardContent>
         </Card>

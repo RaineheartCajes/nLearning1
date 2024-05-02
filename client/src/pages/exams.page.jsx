@@ -115,15 +115,13 @@ function ExamPage() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ alignItems: "center", minWidth:"900px", minHeight: "70vh" }}>
-      <Toolbar
-        className="exams-category--header"
-        sx={{ justifyContent: "center" }}
-      >
-        <Typography className="exams-category--header--text">
-          Examinations
+    <Container maxWidth="lg" sx={{ alignItems: "center", maxWidth:"900px", minWidth:"400px", minHeight: "70vh" }}>
+        <Toolbar sx={{ justifyContent: "space-between", mt: 2}}>
+        <Typography variant="h4" component="div">
+          Examination
         </Typography>
       </Toolbar>
+      <hr></hr>
       {exams.length === 0 && (
         <Typography variant="h6" align="center" style={{ marginTop: 20, fontWeight: "bold", fontSize: "30px" }}>
           No Exams Available
@@ -135,6 +133,7 @@ function ExamPage() {
         spacing={1} 
         alignItems="center"
         justifyContent="center"
+        sx={{mt: 1}}
       >
         {displayedExams.map((exam, index) => (
           <Grid

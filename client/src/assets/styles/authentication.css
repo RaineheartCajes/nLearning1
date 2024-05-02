@@ -79,7 +79,9 @@
 .checkbox {
     filter: hue-rotate(0deg);
     color: white;
-}
+}  
+
+
 
 .auth-button {
     background-color: #E71E4A !important;

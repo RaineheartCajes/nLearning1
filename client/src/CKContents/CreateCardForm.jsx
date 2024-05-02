@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import SearchIcon from '@mui/icons-material/Search';
 
 function CreateCardForm({ addCard }) {
   const [title, setTitle] = useState("");

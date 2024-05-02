@@ -87,7 +87,7 @@ export default function Settings() {
       setSelectedFile(file);
       const formData = new FormData();
       formData.append("image", file);
-
+  
       try {
         const response = await axios.post(
           `http://localhost:3001/settings/uploadProfileImage`,
@@ -100,14 +100,17 @@ export default function Settings() {
           }
         );
         console.log("File uploaded successfully:", response.data);
-       
+  
+        // Update user data with new image URL
+        const updatedUserData = { ...userData, imageUrl: response.data.imageUrl };
+        setUserData(updatedUserData);
         setUser((prev) => ({ ...prev, imageUrl: response.data.imageUrl }));
       } catch (error) {
         console.error("Error uploading file:", error);
       }
     }
   };
-
+  
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
@@ -145,7 +148,7 @@ export default function Settings() {
               style={{ fontWeight: "bold" }}
               size="lg"
             >
-              Personal info
+              Personal Information
             </Typography>
             <Typography level="body-sm">
               Customize how your profile information will appear to the
@@ -278,7 +281,7 @@ export default function Settings() {
               <Button size="sm" variant="outlined" color="neutral">
                 Cancel
               </Button>
-              <Button size="sm" variant="solid" onClick={handleSubmit}>
+              <Button size="sm"  sx={{ bgcolor: "#e11d48"}} onClick={handleSubmit}>
                 Submit
               </Button>
             </CardActions>

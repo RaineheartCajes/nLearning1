@@ -11,10 +11,14 @@ import {
   TextField,
   Toolbar,
   Typography,
+  Snackbar,
+  CircularProgress,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import ContentCard from "../components/ContentCard";
-import "../assets/styles/dashboard.css";
+import AddIcon from '@mui/icons-material/Add';
+
+const apiUrl = "http://localhost:3001/exam";
 
 function CreateContentPage() {
   const [openModal, setOpenModal] = useState(false);
@@ -22,14 +26,26 @@ function CreateContentPage() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    _id: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
-    getExams().then((response) => {
-      setExams(response);
-    });
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${apiUrl}/content/exam-title`);
+      setExams(response.data);
+    } catch (error) {
+      setError("Failed to fetch data. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -47,75 +63,70 @@ function CreateContentPage() {
     });
   };
 
-  const getExams = async () => {
-    let response = await axios.get(
-      "http://localhost:3001/exam/content/exam-title"
-    );
-    return response.data;
-  };
-
-  const handleFormSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setOpenModal(false);
+    if (!formData.title.trim() || !formData.description.trim()) {
+      setError("Please fill in all fields.");
+      return;
+    }
 
+    setLoading(true);
     try {
-      const response = await axios.post(
-        "http://localhost:3001/exam/exam-title",
-        {
-          title: formData.title,
-          description: formData.description,
-          id: uuidv4(),
-        }
-      );
-
-      if (response.statusText === "Created") {
-        console.log("Exam added successfully");
+      const response = await axios.post(`${apiUrl}/exam-title`, {
+        title: formData.title,
+        description: formData.description,
+        id: uuidv4(),
+      });
+      if (response.status === 201) {
+        setSuccessMessage("Topic added successfully.");
+        setExams([...exams, response.data]);
+        setFormData({ title: "", description: "" });
       }
-
-      const newExam = response.data;
-      setExams((prevExams) => [...prevExams, newExam]);
-      setFormData({ title: "", description: "" });
     } catch (error) {
-      console.error("Error adding new exam:", error);
+      setError("Failed to add new topic. Please try again later.");
+    } finally {
+      setLoading(false);
+      setOpenModal(false);
     }
   };
 
+  const handleCloseSnackbar = () => {
+    setSuccessMessage(null);
+  };
+
   return (
-    <Container maxWidth="lg" sx={{ alignItems: "center" }}>
-      <Toolbar
-        className="exams-category--header"
-        sx={{ justifyContent: "space-between" }}
-      >
-        <Typography sx={{ opacity: 0 }}>
-          .............................
+    <Container maxWidth="lg">
+      <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
+        <Typography variant="h4" component="div">
+          Topics
         </Typography>
-        <Typography className="exams-category--header--text">TOPICS</Typography>
-
-        <Button className="create-topic-button" onClick={handleOpenModal}>
-          Create Topic
-        </Button>
+        <Button
+  variant="contained"
+  onClick={handleOpenModal}
+  sx={{ bgcolor: "#e11d48", height: 50 }}
+  startIcon={<AddIcon />} // Adding the AddIcon as the startIcon
+>
+Add Topic
+</Button>
       </Toolbar>
-      <Grid container spacing={0.5} alignItems="center" justifyContent="center">
-        {exams.map((exam, index) => (
-          <Grid
-            className="grid-card-content"
-            vitem
-            xs={12}
-            sm={6}
-            md={4}
-            lg={3}
-            key={exam._id || index}
-          >
-            <ContentCard
-              exam={exam}
-              updatedAt={exam.updatedAt} // Ensure this data is available
-            />
-          </Grid>
-        ))}
+      <hr></hr>
+      <Grid container spacing={3} mt={2}>
+        {loading ? (
+          <CircularProgress color="primary" size={50} />
+        ) : error ? (
+          <Typography variant="body1" color="error">
+            {error}
+          </Typography>
+        ) : (
+          exams.map((exam) => (
+            <Grid item key={exam._id} xs={12} sm={6} md={4} lg={3}>
+              <ContentCard exam={exam} updatedAt={exam.updatedAt} />
+            </Grid>
+          ))
+        )}
       </Grid>
-
       <Dialog open={openModal} onClose={handleCloseModal}>
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={handleSubmit}>
           <DialogTitle>Add New Topic</DialogTitle>
           <DialogContent>
             <TextField
@@ -125,6 +136,7 @@ function CreateContentPage() {
               onChange={handleInputChange}
               fullWidth
               margin="normal"
+              required
             />
             <TextField
               label="Description"
@@ -133,17 +145,25 @@ function CreateContentPage() {
               onChange={handleInputChange}
               fullWidth
               margin="normal"
+              required
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseModal}>Cancel</Button>
-            <Button type="submit" color="primary">
-              Submit
+            <Button type="submit" color="primary" variant="contained" disabled={loading} sx={{ bgcolor: "#e11d48" }}>
+              {loading ? <CircularProgress size={24} /> : "Submit"}
             </Button>
           </DialogActions>
         </form>
       </Dialog>
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={successMessage}
+      />
     </Container>
   );
 }
+
 export default CreateContentPage;
