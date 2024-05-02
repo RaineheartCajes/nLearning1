@@ -95,11 +95,13 @@ function CreateContentPage() {
   };
 
   return (
-    <Container maxWidth="lg">
-      <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
-        <Typography variant="h4" component="div">
-          Topics
-        </Typography>
+    <div className="exam-details--wrapper">
+    {/* <Container sx={{ alignItems: "center", maxWidth:"900px", minWidth:"1000px", minHeight: "70vh" }}></Container> */}
+   
+   <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
+      <Typography variant="h4" component="div">
+        Topics
+      </Typography>
         <Button
   variant="contained"
   onClick={handleOpenModal}
@@ -162,7 +164,7 @@ Add Topic
         onClose={handleCloseSnackbar}
         message={successMessage}
       />
-    </Container>
+    </div>
   );
 }
 

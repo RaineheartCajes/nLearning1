@@ -115,11 +115,13 @@ function ExamPage() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ alignItems: "center", maxWidth:"900px", minWidth:"400px", minHeight: "70vh" }}>
-        <Toolbar sx={{ justifyContent: "space-between", mt: 2}}>
-        <Typography variant="h4" component="div">
-          Examination
-        </Typography>
+    <div className="exam-details--wrapper">
+    {/* <Container sx={{ alignItems: "center", maxWidth:"900px", minWidth:"1000px", minHeight: "70vh" }}></Container> */}
+   
+   <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
+      <Typography variant="h4" component="div">
+        Examination
+      </Typography>
       </Toolbar>
       <hr></hr>
       {exams.length === 0 && (
@@ -181,7 +183,8 @@ function ExamPage() {
           </TableBody>
         </Table>
       </TableContainer>
-    </Container>
+    </div>
+  
   );
 }
 
