@@ -56,7 +56,6 @@ export default function Navbar() {
     fetchData(); // Call fetchData when isAuthenticated, token, or userData changes
   }, [isAuthenticated, token, userData]);
   
-
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };

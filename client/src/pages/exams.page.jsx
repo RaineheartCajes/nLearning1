@@ -116,48 +116,57 @@ function ExamPage() {
 
   return (
     <div className="exam-details--wrapper">
-    {/* <Container sx={{ alignItems: "center", maxWidth:"900px", minWidth:"1000px", minHeight: "70vh" }}></Container> */}
-   
-   <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
-      <Typography variant="h4" component="div">
-        Examination
-      </Typography>
-      </Toolbar>
-      <hr></hr>
-      {exams.length === 0 && (
-        <Typography variant="h6" align="center" style={{ marginTop: 20, fontWeight: "bold", fontSize: "30px" }}>
-          No Exams Available
-        </Typography>
-      )}
-
-      <Grid
-        container
-        spacing={1} 
-        alignItems="center"
-        justifyContent="center"
-        sx={{mt: 1}}
-      >
-        {displayedExams.map((exam, index) => (
-          <Grid
-            className="grid-card-content"
-            item
-            xs={12}
-            sm={6}
-            md={4}
-            lg={3}
-            key={`${exam.id}-${index}`}
+      <Container>
+        <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
+          <Typography variant="h4" component="div">
+            Examination
+          </Typography>
+        </Toolbar>
+        <hr />
+        {exams.length === 0 && (
+          <Typography
+            variant="h6"
+            align="center"
+            style={{
+              marginTop: 20,
+              fontWeight: "bold",
+              fontSize: "30px",
+            }}
           >
-            <div className="grid-item--wrapper">
-              <ExamCard
-                key={`${exam.id}-${index}`}
-                exam={exam}
-                updatedAt={exam.updatedAt}
-                style={{ minHeight: "300px" }}
-              />
-            </div>
-          </Grid>
-        ))}
-      </Grid>
+            No Exams Available
+          </Typography>
+        )}
+
+        <Grid
+          container
+          spacing={1}
+          alignItems="center"
+          justifyContent="center"
+          sx={{ mt: 1 }}
+        >
+          {displayedExams.map((exam, index) => (
+            <Grid
+              className="grid-card-content"
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              xl={3}
+              key={`${exam.id}-${index}`}
+            >
+              <div className="grid-item--wrapper">
+                <ExamCard
+                  key={`${exam.id}-${index}`}
+                  exam={exam}
+                  updatedAt={exam.updatedAt}
+                  style={{ minHeight: "300px" }}
+                />
+              </div>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
       <TableContainer
         component={Paper}
         style={{ marginTop: "10px", marginBottom: "10px" }}
@@ -184,7 +193,6 @@ function ExamPage() {
         </Table>
       </TableContainer>
     </div>
-  
   );
 }
 

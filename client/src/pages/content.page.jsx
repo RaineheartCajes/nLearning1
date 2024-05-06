@@ -96,29 +96,32 @@ function CreateContentPage() {
 
   return (
     <div className="exam-details--wrapper">
-    {/* <Container sx={{ alignItems: "center", maxWidth:"900px", minWidth:"1000px", minHeight: "70vh" }}></Container> */}
-   
-   <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
-      <Typography variant="h4" component="div">
-        Topics
-      </Typography>
+    <Container>
+    <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
+          <Typography variant="h4" component="div">
+          Topics
+        </Typography>
         <Button
-  variant="contained"
-  onClick={handleOpenModal}
-  sx={{ bgcolor: "#e11d48", height: 50 }}
-  startIcon={<AddIcon />} // Adding the AddIcon as the startIcon
->
-Add Topic
-</Button>
+          variant="contained"
+          onClick={handleOpenModal}
+          sx={{ bgcolor: "#e11d48", height: 50 }}
+          startIcon={<AddIcon />}
+        >
+          Add Topic
+        </Button>
       </Toolbar>
-      <hr></hr>
-      <Grid container spacing={3} mt={2}>
+      <hr />
+      <Grid container spacing={3} sx={{ mt: 2 }}>
         {loading ? (
-          <CircularProgress color="primary" size={50} />
+          <Grid item xs={12} sx={{ textAlign: "center" }}>
+            <CircularProgress color="primary" size={50} />
+          </Grid>
         ) : error ? (
-          <Typography variant="body1" color="error">
-            {error}
-          </Typography>
+          <Grid item xs={12} sx={{ textAlign: "center" }}>
+            <Typography variant="body1" color="error">
+              {error}
+            </Typography>
+          </Grid>
         ) : (
           exams.map((exam) => (
             <Grid item key={exam._id} xs={12} sm={6} md={4} lg={3}>
@@ -164,6 +167,7 @@ Add Topic
         onClose={handleCloseSnackbar}
         message={successMessage}
       />
+    </Container>
     </div>
   );
 }

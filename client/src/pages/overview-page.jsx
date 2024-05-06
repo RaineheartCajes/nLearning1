@@ -87,10 +87,10 @@ const OverviewAdmin = () => {
   };
 
   return (
-    <Card sx={{ m: 2 }}>
+    <Card sx={{ margin: 2 }}>
       <CardContent>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Paper elevation={3} sx={{ p: 2, height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
               <Typography variant="h6" align="center">Distribution by Department</Typography>
               {loading ? (
@@ -100,7 +100,7 @@ const OverviewAdmin = () => {
               )}
             </Paper>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Paper elevation={3} sx={{ p: 2, height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
               <Typography variant="h6" align="center">Exam Overview</Typography>
               <BarChartCustom data={exams} onBarHover={handleBarHover} onBarClick={onExamBarClick} />
@@ -122,7 +122,7 @@ const OverviewAdmin = () => {
               </InputAdornment>
             ),
           }}
-          sx={{ mt: 4, width: 300 }}
+          sx={{ mt: 4, width: "100%", maxWidth: 300, mx: "auto" }}
         />
 
         <TableContainer component={Paper} sx={{ mt: 2 }}>
