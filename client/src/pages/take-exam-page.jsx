@@ -17,6 +17,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import QuestionChoice from "../components/ExamComponents/QuestionChoice.jsx";
 import axios from "axios";
 import { useCustomContext } from "../main.jsx";
+import "../assets/styles/take-exam.css"; // Import CSS file
 
 const TakeExamPage = () => {
   const navigate = useNavigate();
@@ -123,28 +124,24 @@ const TakeExamPage = () => {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <Box
-      className="take-exam-content--wrapper"
-      boxShadow={2}
-      sx={{
-        width: 900,
-        height: "430px",
-        margin: "auto",
-        overflow: "auto",
-        marginTop: "50px",
-      }}
-    >
+    <Box className="take-exam-content--wrapper">
       <div className="exam-question--header">
         <h3>{title}</h3>
         <span>Question: {instructions}</span>
       </div>
-      <Card
-        className="exam-card"
-        style={{ height: "340px", padding: "1rem", margin: "1rem" }}
-      >
+      <Card className="exam-card">
         <CardContent>
-          <Typography className="question--header" fontSize={"1.5rem"}>
-            Question #{currentQuestionIndex + 1} {currentQuestion.question}
+          <Typography className="question--header"
+          style={{
+            marginBottom: "30px",
+            
+          }}>
+            
+            {currentQuestionIndex + 1}. {currentQuestion.question}
+
+            <div style={{ 
+              border: "0.1px solid rgba(0, 0, 0, 0.5)",
+              marginTop: "25px", }}></div>
           </Typography>
           <div>
             {currentQuestion.choices.map((choice, index) => (
@@ -157,28 +154,12 @@ const TakeExamPage = () => {
               />
             ))}
             {answerConfirmed && (
-              <Typography
-                sx={{
-                  color: feedback.isCorrect ? "green" : "black",
-                  mt: 2,
-                  fontWeight: "bold",
-                }}
-              >
+              <Typography className={`feedback ${feedback.isCorrect ? "correct" : "incorrect"}`}>
                 {feedback.message}
               </Typography>
             )}
           </div>
-          <Box
-            className="question--footnote"
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              "& > button": {
-                margin: "0 8px",
-              },
-              fontSize: "1.5rem",
-            }}
-          >
+          <div className="question--footnote">
             <Button
               variant="outlined"
               onClick={handlePrevQuestion}
@@ -187,7 +168,6 @@ const TakeExamPage = () => {
                 currentQuestionIndex >= farthestQuestionReached
               }
               startIcon={<ArrowBackIosNewIcon />}
-              sx={{ textTransform: "capitalize" }}
             >
               Back
             </Button>
@@ -195,53 +175,45 @@ const TakeExamPage = () => {
               variant="contained"
               onClick={handleConfirmAnswer}
               disabled={answerConfirmed}
-              sx={{ textTransform: "capitalize" }}
             >
               Confirm Answer
             </Button>
             <Button
-              variant="contained"
+              variant="outlined"
               onClick={handleNextQuestion}
-              endIcon={<ArrowForwardIosIcon />}
               disabled={
                 currentQuestionIndex === questions.length - 1 ||
                 !answerConfirmed
               }
-              sx={{ textTransform: "capitalize" }}
+              endIcon={<ArrowForwardIosIcon />}
             >
               Next
             </Button>
             <Button
-              variant="contained"
+              variant="outlined"
               color="primary"
               onClick={handleSubmitExam}
               disabled={currentQuestionIndex !== questions.length - 1}
-              sx={{ textTransform: "capitalize" }}
             >
               Submit
             </Button>
-
-            <Dialog
-              open={openDialog}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">{"Notice"}</DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  You cannot go back during the exam. Please finish the exam.
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose} autoFocus>
-                  OK
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </Box>
+          </div>
         </CardContent>
       </Card>
+
+      <Dialog open={openDialog} onClose={handleClose}>
+        <DialogTitle>{"Notice"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You cannot go back during the exam. Please finish the exam.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

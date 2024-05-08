@@ -95,7 +95,8 @@ function CreateContentPage() {
   };
 
   return (
-    <Container maxWidth="lg">
+    <div classname="exam-details--wrapper">
+    <Container>
       <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
         <Typography variant="h4" component="div">
           Topics
@@ -163,6 +164,7 @@ Add Topic
         message={successMessage}
       />
     </Container>
+    </div>
   );
 }
 

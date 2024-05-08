@@ -115,7 +115,8 @@ function ExamPage() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ alignItems: "center", maxWidth:"900px", minWidth:"400px", minHeight: "70vh" }}>
+    <div classname="exam-details--wrapper">
+    <Container>
         <Toolbar sx={{ justifyContent: "space-between", mt: 2}}>
         <Typography variant="h4" component="div">
           Examination
@@ -182,6 +183,7 @@ function ExamPage() {
         </Table>
       </TableContainer>
     </Container>
+    </div>
   );
 }
 

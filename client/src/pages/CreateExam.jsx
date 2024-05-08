@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { FiTrash2, FiEdit } from "react-icons/fi";
+import { RiCloseFill, RiLoopRightFill } from "react-icons/ri";
 import { Card, Button, CardContent } from "@mui/material";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import "../assets/styles/create-exam.css";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from "@mui/icons-material/Add";
-import Swal from 'sweetalert2';
-
+import { IoMdAddCircleOutline } from "react-icons/io";
+import Swal from "sweetalert2";
 
 const CreateExam = () => {
   const navigate = useNavigate();
@@ -93,9 +95,9 @@ const CreateExam = () => {
       setErrorMessage("");
     } else {
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Please enter a question, choices, and select a correct answer before saving.',
+        icon: "error",
+        title: "Error",
+        text: "Please enter a question, choices, and select a correct answer before saving.",
       });
     }
   };
@@ -133,10 +135,10 @@ const CreateExam = () => {
       setErrorMessage("");
     } else {
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: "Please enter a question, choices, and select a correct answer before updating."
-    });
+        icon: "error",
+        title: "Error",
+        text: "Please enter a question, choices, and select a correct answer before updating.",
+      });
     }
   };
 
@@ -187,7 +189,9 @@ const CreateExam = () => {
       <div className="modal-backdrop">
         <div className="modal-content">
           <div className="modal-header">
-            <h2>Assign Participants</h2>
+            <h2>
+              <AiOutlineUsergroupAdd />
+            </h2>
             <button className="modal-close-btn" onClick={onClose}>
               ×
             </button>
@@ -203,10 +207,10 @@ const CreateExam = () => {
   return (
     <Card sx={{ m: 5, width: "800px" }}>
       <CardContent>
+        <h2 className="create-exam-title">Create Exam</h2>
         <div className="create-exam-container">
-          <h2 className="create-exam-title">Create Exam</h2>
-
-          <div className="exam-settings">
+        {editingIndex === null && (
+          <div className="exam-settings" >
             <input
               type="number"
               placeholder="Attempt Limits"
@@ -219,11 +223,25 @@ const CreateExam = () => {
               value={passingScore}
               onChange={(e) => setPassingScore(e.target.value)}
             />
-            <button onClick={() => setShowAssignParticipantsModal(true)}>
+            <button
+              className="assign-button"
+              onClick={() => setShowAssignParticipantsModal(true)}
+              style={{
+                fontSize: "14px",
+                alignItems: "center",
+              }}
+            >
+              <AiOutlineUsergroupAdd
+                style={{
+                  height: "18px",
+                  width: "18px",
+                }}
+              />
               Assign Participants
             </button>
           </div>
-
+          
+        )}
           <AssignParticipantsModal
             isOpen={showAssignParticipantsModal}
             onClose={() => setShowAssignParticipantsModal(false)}
@@ -232,37 +250,48 @@ const CreateExam = () => {
             onClick={handleAddQuestion}
             className="exam-button"
             style={{
-              fontSize: "14px",
-              padding: "8px 16px",
+              padding: "8px 23px",
               width: "160px",
               display: "flex",
               alignItems: "center", // Aligns icon and text vertically
               fontSize: "13px",
-              marginLeft: "18px",
+              // marginLeft: "25px",
+              border: "1px solid rgba(0, 0, 0, 0.1)",
             }}
           >
-            <AddIcon style={{ marginRight: "8px" }} /> {/* Icon before text */}
+            <IoMdAddCircleOutline
+              style={{
+                height: "20px",
+                width: "20px",
+              }}
+            />{" "}
+            {/* Icon before text */}
             Add Question
           </button>
-
+        
           {showInput && (
             <div className="question-input">
-              <div className="input-div">
+              Question:
+              <div
+                className="input-div"
+                style={{ display: "flex", justifyContent: "center" }}
+              >
                 <textarea
                   className="input-effect"
                   type="text"
                   value={newQuestion}
                   onChange={handleQuestionChange}
-                  placeholder="   Type your question..."
+                  placeholder="  Type your question..."
                   style={{
                     height: "50px",
                     width: "500px",
-                    borderRadius: "10px",
+                    borderRadius: "1px",
+                    border: "1px inset black",
                   }}
                 />
                 <span className="focus-border"></span>
               </div>
-
+              <hr3>Choices:</hr3>
               <div className="choices-container">
                 {choices.map((choice, index) => (
                   <div
@@ -272,8 +301,10 @@ const CreateExam = () => {
                       selectedChoice === index ? "selected" : ""
                     }`}
                   >
+                    {/* inside submitted choices */}
                     {editingChoiceIndex === index ? (
-                      <div>
+                      <div className="editing-container">
+                        {/* inside edit question */}
                         <p className="editingText">Editing..</p>
                         <div className="input-div">
                           <textarea
@@ -281,32 +312,35 @@ const CreateExam = () => {
                             type="text"
                             value={editingChoiceText}
                             onChange={handleChoiceChange}
-                            placeholder="  Type a choice..."
+                            placeholder="Type a choice..."
                             style={{
                               height: "50px",
                               width: "500px",
                               borderRadius: "10px",
                             }}
                           />
-
                           <span className="focus-border"></span>
                         </div>
-
-                        <button className="exam-button">
-                          <FiTrash2 onClick={() => handleDeleteChoice(index)} />
-                        </button>
-
-                        {/* <FiEdit onClick={() => handleEditChoice(index)} /> */}
-                        <button
-                          onClick={handleAddChoice}
-                          className="exam-button"
-                        >
-                          {editingChoiceIndex !== null ? <FiEdit /> : "Add"}
-                        </button>
-                        <button onClick={handleCancelEditChoice}>Cancel</button>
+                        <div className="button-group">
+                          <button
+                            className="exam-button"
+                            onClick={() => handleDeleteChoice(index)}
+                          >
+                            <FiTrash2 />
+                          </button>
+                          <button
+                            className="exam-button"
+                            onClick={handleAddChoice}
+                          >
+                            {editingChoiceIndex !== null ? <FiEdit /> : "Add"}
+                          </button>
+                          <button onClick={handleCancelEditChoice}>
+                            Cancel
+                          </button>
+                        </div>
                       </div>
                     ) : (
-                      <div>
+                      <div className="submitted-container">
                         <input
                           type="checkbox"
                           checked={choice.isCorrect}
@@ -315,55 +349,56 @@ const CreateExam = () => {
                             marginRight: "8px",
                           }}
                         />
-
                         <label htmlFor={`choice-${index}`}>{choice.text}</label>
-                        <FiEdit
-                          onClick={() => handleEditChoice(index)}
-                          style={{marginRight: "2px", marginLeft: "400px" }}
-                        />
-                        <FiTrash2 onClick={() => handleDeleteChoice(index)} />
+                        <div className="icon-group">
+                          <FiEdit
+                            onClick={() => handleEditChoice(index)}
+                            style={{ marginRight: "5px" }}
+                          />
+                          |
+                          <FiTrash2
+                            onClick={() => handleDeleteChoice(index)}
+                            style={{ marginLeft: "5px" }}
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
                 ))}
               </div>
-              <div className="input-div">
+              {/* choice text area */}
+              <div
+                className="input-div"
+                style={{ display: "flex", justifyContent: "center" }}
+              >
                 <textarea
                   className="input-effect"
                   type="text"
                   value={newChoice}
                   onChange={(e) => setNewChoice(e.target.value)}
-                  placeholder="   Type a choice..."
+                  placeholder="   Type choice..."
                   style={{
                     height: "50px",
                     width: "500px",
-                    borderRadius: "10px",
+                    borderRadius: "1px",
+                    marginTop: "15px",
+                    border: "1px inset black",
                   }}
                 />
                 <span className="focus-border"></span>
               </div>
-
               <button
                 className="exam-button"
                 onClick={handleAddChoice}
                 disabled={newChoice.trim() === ""}
                 style={{
-                  padding: "8px 16px", // Adjusted padding
-                  fontSize: "12px",
-                  marginLeft: "280px",
-                  borderRadius: "8px", // Added border radius
-                  //backgroundColor: "#007bff", // Added background color
-                  //color: "#fff", // Changed text color to white
-                  border: "1px solid", // Removed border
-                  cursor: "pointer", // Added pointer cursor
-                  //marginLeft: "300px",
-                  //marginRight: "150px"
+                  // backgroundColor: "transparent",
+                  border: "none",
                 }}
               >
-                <AddIcon style={{ fontSize: "16px", marginRight: "4px" }} /> Add
-                Choice
+                {/* Add icon on add question */}
+                <AddIcon style={{ fontSize: "16px" }} />
               </button>
-
               {errorMessage && (
                 <p className="error-message" style={{ color: "red" }}>
                   {errorMessage}
@@ -374,16 +409,32 @@ const CreateExam = () => {
                   <button
                     className="exam-button"
                     onClick={handleUpdateQuestion}
+                    style={{
+                      marginLeft: "Auto",
+                    }}
                   >
-                    Update Question
+                    <RiLoopRightFill />
+                    Update
                   </button>
-                  <button
+                  {/* <button
                     className="exam-button"
                     onClick={() => handleDeleteQuestion(editingIndex)}
                   >
-                    Delete Question
+                    Delete
+                  </button> */}
+                  {/* big ass button */}
+                  <button
+                    className="cancel-button"
+                    onClick={() => handleCancelEdit(editingIndex)}
+                    style={{
+                      ":hover": {
+                        backgroundColor: "#ed2618",
+                      },
+                    }}
+                  >
+                    <RiCloseFill />
+                    Cancel
                   </button>
-                  <button onClick={handleCancelEdit}>Cancel</button>
                 </div>
               ) : (
                 <button
@@ -391,39 +442,24 @@ const CreateExam = () => {
                   onClick={handleSaveQuestion}
                   disabled={newQuestion.trim() === "" && choices.length === 0}
                   style={{
-                    padding: "8px 16px", // Adjusted padding
-                    fontSize: "12px",
-                    borderRadius: "8px", // Added border radius
-                    //backgroundColor: "#007bff", // Added background color
-                    //color: "#fff", // Changed text color to white
-                    border: "1px solid", // Removed border
-                    cursor: "pointer", // Added pointer cursor
-                    //marginLeft: "-110px",
+                    border: "none", // Removed border
+                    // backgroundColor: "transparent",
                   }}
                 >
-                  <AddIcon style={{ fontSize: "16px", marginRight: "4px" }} />{" "}
-                  Save Question
+                  {/* SAVE ICON IN ADD QUESTION */}
+                  <SaveIcon style={{ fontSize: "16px" }} />{" "}
                 </button>
               )}
             </div>
           )}
           <div className="display-questions">
-            <h3>Questions:</h3>
             {questions.map((q, index) => (
               <div key={index}>
-                <strong>
-                  Q{index + 1}. {q.question}
-                </strong>
-                {editingIndex === null && (
-                  <div>
-                    <button onClick={() => handleEditQuestion(index)}>
-                      Edit
-                    </button>
-                    <button onClick={() => handleDeleteQuestion(index)}>
-                      Delete
-                    </button>
-                  </div>
-                )}
+                <div className="line-border"></div>
+                <div className="question-header">
+                  <strong>Question #{index + 1}. </strong> {q.question}
+                </div>
+
                 {q.choices.map((choice, i) => (
                   <div
                     key={i}
@@ -432,8 +468,10 @@ const CreateExam = () => {
                       border: "1px solid #ccc",
                       padding: "10px",
                       marginBottom: "5px",
+                      marginTop: "10px",
                       backgroundColor:
                         selectedChoice === i ? "#e0e0e0" : "white",
+                      borderRadius: "5px",
                     }}
                   >
                     {choice.isCorrect && (
@@ -476,6 +514,22 @@ const CreateExam = () => {
                     )}
                   </div>
                 ))}
+                {editingIndex === null && (
+                  <div className="question-buttons" key={index}>
+                    <button
+                      className="edit-button"
+                      onClick={() => handleEditQuestion(index)}
+                    >
+                      <FiEdit style={{ fontSize: "15px" }} />
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDeleteQuestion(index)}
+                    >
+                      <FiTrash2 style={{ fontSize: "15px" }} />
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -485,8 +539,9 @@ const CreateExam = () => {
             style={{
               backgroundColor: "#e71e4a",
               color: "white",
-              marginLeft: "auto", // Align to the right
+              // marginLeft: "auto", // Align to the right
               marginTop: "75px",
+              alignItems: "center",
             }}
             onClick={() => saveExam(examId, questions)}
             startIcon={<SaveIcon />}

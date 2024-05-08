@@ -1,92 +1,55 @@
+/* TakeExamPage.css */
+
 .take-exam-content--wrapper {
-   padding: 0.5rem ; 
-  margin-top: 2rem;
-  background-color: #fff;
-  display: flex; 
-  flex-direction: column;
-  min-height: 500px;
-  width: 850px;
-  height: 500px;
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 0 20px;
+  overflow: hidden; /* Using hidden overflow instead of auto */
 }
+
+.exam-question--header {
+  margin: 10px 0;
+}
+
 .question--header {
-  font-family: "Inter";
-  font-weight: 700;
-  margin-bottom: 0.3rem;
+  font-size: 1.5rem;
 }
+
+.feedback {
+  font-weight: bold;
+}
+
+.feedback.correct {
+  color: green;
+}
+
+.feedback.incorrect {
+  color: red;
+}
+
 .question--footnote {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-  gap: 1rem;
-}
-.letter-choice {
-  font-family: "Inter" !important;
-  font-weight: 700 !important;
-  display: inline-flex !important;
-  margin-right: 0.3rem !important;
-  margin-left: 1rem !important;
-}
-.question--score {
-  display: inline-flexbox;
-  justify-content: flex-end;
-  font-weight: 700;
-  color: #454545;
-}
-.exam-question--header {
-  background-color: #f1f1f1;
-  padding: 1rem;
-}
-.exam-question--choice {
-  margin-bottom: 0.5rem;
-}
-.exam-card {
-  width: 100%;
-  height: 90vh;
-}
-/*timer///////////////////////////////////////////////////////*/
-.countdown-timer-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
+  font-size: 1.5rem;
+  margin-top: 20px; /* Added margin for better spacing */
 }
 
-.timer-ring {
-  margin-bottom: 10px;
+.question--footnote > button {
+  margin-left: 8px; /* Changed margin to only affect the left side for better alignment */
 }
 
-.ring-circle {
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
-  transition: stroke-dashoffset 1s ease-in-out;
-}
-
-.countdown-timer-container.pulsate {
-  animation: pulsate 1s infinite;
-}
-
-@keyframes pulsate {
-  0% {
-    transform: scale(1);
+/* Responsive Styling */
+@media screen and (max-width: 768px) {
+  .take-exam-content--wrapper {
+    padding: 0 10px;
   }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
 
-.green-ring {
-  animation: progress 1s linear infinite;
-}
-
-@keyframes progress {
-  to {
-    stroke: green;
+  .question--footnote {
+    flex-direction: column;
+    align-items: flex-start;
   }
-}
 
-.timer-value {
-  font-size: 1.5em;
-  color: #333;
+  .question--footnote > button {
+    margin: 8px 0;
+  }
 }

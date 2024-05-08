@@ -69,7 +69,7 @@ function CKCreateContent() {
           sx={{ display: "flex", margin: "auto" }}
           onClick={saveContent}
         >
-          Save Content
+          Save
         </Button>
       </Card>
     </>

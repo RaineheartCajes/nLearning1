@@ -3,14 +3,15 @@ import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, TextField, Typography, Link, Grid, Avatar, Container, CircularProgress } from "@mui/material";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import NTS_Logo from "../../assets/images/NTS_Logo.png";
-import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 import { useAuth } from "../../contexts/auth-context";
 
 const LoginSchema = Yup.object().shape({
-  Username: Yup.string().required("Username is required"),
+  username: Yup.string().required("Username is required"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters long")
     .required("Password is required"),
@@ -49,7 +50,7 @@ const LoginForm = () => {
 
     try {
       const response = await axios.post("http://localhost:3001/auth/signin", {
-        username: data.Username,
+        username: data.username,
         password: data.password,
       });
 
@@ -120,48 +121,62 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="auth-container-wrapper">
-      <div className="auth-container">
-        <form onSubmit={handleSubmit(loginEvent)} className="login-form">
-          <img src={NTS_Logo} alt="Company Logo" className="logo" />
-          <div className="signin--header">Sign In</div>
-          {loginSuccess && (
-            <p style={{ color: "green", textAlign: "center" }}>
-              Login successful!
-            </p>
-          )}
-          <div className="fields-wrapper">
-            <div className="form-label">Username</div>
-            <input
-              {...register("Username")}
-              placeholder="Please enter Username"
-              className={`form-field ${errors.Username && "error"}`}
-            />
-            <div className="error-message">{errors.Username?.message}</div>
-            <div className="form-label">Password</div>
-            <input
-              {...register("password")}
-              type="password"
-              placeholder="Please enter Password"
-              className={`form-field ${errors.password && "error"}`}
-            />
-            <div className="error-message">{errors.password?.message}</div>
-          </div>
-          <Button type="submit" className="auth-button" disabled={isSubmitting}>
-            {isSubmitting ? "Logging in..." : "Login"}
+    <Container component="main" maxWidth="xs">
+      <div style={{ marginTop: 50, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {/* <Avatar style={{ backgroundColor: 'red' }}>
+          <LockOutlinedIcon />
+        </Avatar> */}
+        <img src={NTS_Logo} alt="Company Logo" className="logo" />
+        <Typography component="h1" variant="h5" style={{ marginTop: 10 }}>
+          Sign in
+        </Typography>
+        <form onSubmit={handleSubmit(loginEvent)} style={{ width: '100%', marginTop: 1 }}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            id="username"
+            label="Username"
+            {...register("username")}
+            error={!!errors.username}
+            helperText={errors.username?.message}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            id="password"
+            label="Password"
+            type="password"
+            {...register("password")}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={isSubmitting}
+            style={{ margin: '20px 0 10px' }}
+          >
+            {isSubmitting ? <CircularProgress size={24} /> : "Sign In"}
           </Button>
-          <div className="end-footer">
-            <p className="forgot-password">
-              Forgot your password? <a href="/forgot">Reset it here</a>
-            </p>
-            <hr />
-            <p className="signup-text">
-              Don't have an account? <a href="/register">Sign Up</a>
-            </p>
-          </div>
+          <Grid container>
+            <Grid item xs>
+              <Link href="/forgot" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="/register" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
         </form>
       </div>
-    </div>
+    </Container>
   );
 };
 
