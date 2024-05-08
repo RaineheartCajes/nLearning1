@@ -115,76 +115,74 @@ function ExamPage() {
   };
 
   return (
-    <div classname="exam-details--wrapper">
-    <Container>
-        <Toolbar sx={{ justifyContent: "space-between", mt: 2}}>
-        <Typography variant="h4" component="div">
-          Examination
-        </Typography>
-      </Toolbar>
-      <hr></hr>
-      {exams.length === 0 && (
-        <Typography variant="h6" align="center" style={{ marginTop: 20, fontWeight: "bold", fontSize: "30px" }}>
-          No Exams Available
-        </Typography>
-      )}
+    <div className="exam-details--wrapper">
+    <Toolbar sx={{ justifyContent: "space-between", mt: 2}}>
+    <Typography variant="h4" component="div">
+      Examination
+    </Typography>
+  </Toolbar>
+  <hr></hr>
+  {exams.length === 0 && (
+    <Typography variant="h6" align="center" style={{ marginTop: 20, fontWeight: "bold", fontSize: "30px" }}>
+      No Exams Available
+    </Typography>
+  )}
 
-        <Grid
-          container
-          spacing={1}
-          alignItems="center"
-          justifyContent="center"
-          sx={{ mt: 1 }}
-        >
-          {displayedExams.map((exam, index) => (
-            <Grid
-              className="grid-card-content"
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-              xl={3}
-              key={`${exam.id}-${index}`}
-            >
-              <div className="grid-item--wrapper">
-                <ExamCard
-                  key={`${exam.id}-${index}`}
-                  exam={exam}
-                  updatedAt={exam.updatedAt}
-                  style={{ minHeight: "300px" }}
-                />
-              </div>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-      <TableContainer
-        component={Paper}
-        style={{ marginTop: "10px", marginBottom: "10px" }}
+  <Grid
+    container
+    spacing={1} 
+    alignItems="center"
+    justifyContent="center"
+    sx={{mt: 1}}
+  >
+    {displayedExams.map((exam, index) => (
+      <Grid
+        className="grid-card-content"
+        item
+        xs={12}
+        sm={6}
+        md={4}
+        lg={3}
+        key={`${exam.id}-${index}`}
       >
-        <Table>
-          <TableHead>
-            <TableRow style={{ backgroundColor: "#e71e4a" }}>
-              <TableCell style={{ color: "white" }}>Exam Title</TableCell>
-              <TableCell style={{ color: "white" }}>Deparment</TableCell>
-              <TableCell style={{ color: "white" }}>Score</TableCell>
-              <TableCell style={{ color: "white" }}>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {completedExams.map((exam) => (
-              <TableRow key={exam._id}>
-                <TableCell>{exam.title}</TableCell>
-                <TableCell>{exam.assignedDepartment}</TableCell>
-                <TableCell>{exam.score}</TableCell>
-                <TableCell>{exam.status}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Container>
+        <div className="grid-item--wrapper">
+          <ExamCard
+            key={`${exam.id}-${index}`}
+            exam={exam}
+            updatedAt={exam.updatedAt}
+            style={{ minHeight: "300px" }}
+          />
+        </div>
+      </Grid>
+    ))}
+  </Grid>
+  <TableContainer
+    component={Paper}
+    style={{ marginTop: "10px", marginBottom: "10px" }}
+  >
+    <Table>
+      <TableHead>
+        <TableRow style={{ backgroundColor: "#e71e4a" }}>
+          <TableCell style={{ color: "white" }}>Exam Title</TableCell>
+          <TableCell style={{ color: "white" }}>Deparment</TableCell>
+          <TableCell style={{ color: "white" }}>Score</TableCell>
+          <TableCell style={{ color: "white" }}>Status</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {completedExams.map((exam) => (
+          <TableRow key={exam._id}>
+            <TableCell>{exam.title}</TableCell>
+            <TableCell>{exam.assignedDepartment}</TableCell>
+            <TableCell>{exam.score}</TableCell>
+            <TableCell>{exam.status}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</div>
+    
   );
 }
 

@@ -95,8 +95,7 @@ function CreateContentPage() {
   };
 
   return (
-    <div classname="exam-details--wrapper">
-    <Container>
+    <div className="exam-details--wrapper">
       <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
         <Typography variant="h4" component="div">
           Topics
@@ -167,7 +166,6 @@ function CreateContentPage() {
         onClose={handleCloseSnackbar}
         message={successMessage}
       />
-    </Container>
     </div>
   );
 }
