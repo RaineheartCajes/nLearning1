@@ -115,27 +115,19 @@ function ExamPage() {
   };
 
   return (
-    <div className="exam-details--wrapper">
-      <Container>
-        <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
-          <Typography variant="h4" component="div">
-            Examination
-          </Typography>
-        </Toolbar>
-        <hr />
-        {exams.length === 0 && (
-          <Typography
-            variant="h6"
-            align="center"
-            style={{
-              marginTop: 20,
-              fontWeight: "bold",
-              fontSize: "30px",
-            }}
-          >
-            No Exams Available
-          </Typography>
-        )}
+    <div classname="exam-details--wrapper">
+    <Container>
+        <Toolbar sx={{ justifyContent: "space-between", mt: 2}}>
+        <Typography variant="h4" component="div">
+          Examination
+        </Typography>
+      </Toolbar>
+      <hr></hr>
+      {exams.length === 0 && (
+        <Typography variant="h6" align="center" style={{ marginTop: 20, fontWeight: "bold", fontSize: "30px" }}>
+          No Exams Available
+        </Typography>
+      )}
 
         <Grid
           container
@@ -192,7 +184,7 @@ function ExamPage() {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </Container>
   );
 }
 

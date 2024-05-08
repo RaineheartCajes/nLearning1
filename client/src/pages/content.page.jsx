@@ -95,10 +95,10 @@ function CreateContentPage() {
   };
 
   return (
-    <div className="exam-details--wrapper">
+    <div classname="exam-details--wrapper">
     <Container>
-    <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
-          <Typography variant="h4" component="div">
+      <Toolbar sx={{ justifyContent: "space-between", mt: 2 }}>
+        <Typography variant="h4" component="div">
           Topics
         </Typography>
         <Button

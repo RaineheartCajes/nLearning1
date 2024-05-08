@@ -17,7 +17,10 @@ import "../assets/styles/sidebar.css";
 export default function Sidebar() {
   const navigate = useNavigate();
   const { userId } = useParams();
+  const [selectedItem, setSelectedItem] = React.useState("Overview"); // Initial selected item
+
   const handleSidebarClick = (text) => {
+    setSelectedItem(text); // Update selected item state
     switch (text) {
       case "Overview":
         navigate("/dashboard/overview");
@@ -32,10 +35,8 @@ export default function Sidebar() {
         navigate("/dashboard/employees");
         break;
       case "Settings":
-        navigate(`/dashboard/settings`),
-          {
-            state: { userId: userId },
-          };
+        navigate(`/dashboard/settings`, { state: { userId: userId } });
+        break;
       default:
         break;
     }
@@ -44,7 +45,6 @@ export default function Sidebar() {
   return (
     <Box className="test">
       <Drawer variant="permanent" className="draw">
-        {/* <Toolbar /> */}
         <Box className="sidebar-box-wrapper">
           <List>
             {[
@@ -54,7 +54,12 @@ export default function Sidebar() {
               "Employees",
               "Settings",
             ].map((text, index) => (
-              <ListItem key={text} className="sidebar-list-items">
+              <ListItem
+                key={text}
+                className={
+                  selectedItem === text ? "sidebar-list-item-active" : "sidebar-list-item"
+                }
+              >
                 <ListItemButton onClick={() => handleSidebarClick(text)}>
                   <ListItemIcon className="sidebar-icons">
                     {index === 0 && <SlGraph />}

@@ -71,7 +71,7 @@ function CKCreateContent() {
           onClick={saveContent}
           startIcon={<SaveIcon/>}
         >
-          Save Content
+          Save
         </Button>
       </Card>
     </>

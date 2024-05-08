@@ -98,7 +98,14 @@ const ExamResultPage = () => {
 
   return (
     <div className="exam-result-container">
-      <Card style={{ marginTop: "40px", width: "800px", height: "300px" }}>
+      <Card
+        style={{
+          marginTop: "40px",
+          maxWidth: "800px",
+          width: "80%",
+          margin: "auto",
+        }}
+      >
         <CardContent>
           <Typography
             variant="h4"
