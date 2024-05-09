@@ -17,7 +17,7 @@ import "../assets/styles/sidebar.css";
 export default function Sidebar() {
   const navigate = useNavigate();
   const { userId } = useParams();
-  const [selectedItem, setSelectedItem] = React.useState("Overview"); // Initial selected item
+  const [selectedItem, setSelectedItem] = React.useState(""); // Initial selected item
 
   const handleSidebarClick = (text) => {
     setSelectedItem(text); // Update selected item state

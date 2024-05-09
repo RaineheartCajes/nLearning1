@@ -199,7 +199,7 @@ button:disabled {
 /* Styling select element */
 select {
   padding: 10px;
-  background: #2d2f31;
+  background: #edeef0;
   color: white;
   font-size: 1.2em;
   font-variant: small-caps;
@@ -287,9 +287,7 @@ select {
   font-size: 1.2rem;
 }
 
-.modal-body {
-  /* Styles for the modal body */
-}
+
 
 .choices-container {
   display: flex;
@@ -475,9 +473,6 @@ select {
   margin-right: 10px; /* Add some space between buttons */
 }
 
-.display-questions {
-
-}
 
 .question-header {
   display: flex; /* Use Flexbox */
@@ -485,7 +480,7 @@ select {
   justify-content: center; /* Align children vertically */
   align-items: center; /* Align children horizontally */
   padding: 15px;
-  background-color: rgba(231, 30, 74, 0.5); 
+  background-color: rgba(197, 196, 196, 0.5); 
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 800px; /* Adjust as needed */

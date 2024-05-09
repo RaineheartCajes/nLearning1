@@ -462,18 +462,18 @@ const CreateExam = () => {
 
                 {q.choices.map((choice, i) => (
                   <div
-                    key={i}
-                    onClick={() => handleSelectChoice(i)}
-                    style={{
-                      border: "1px solid #ccc",
-                      padding: "10px",
-                      marginBottom: "5px",
-                      marginTop: "10px",
-                      backgroundColor:
-                        selectedChoice === i ? "#e0e0e0" : "white",
-                      borderRadius: "5px",
-                    }}
-                  >
+                  key={i}
+                  onClick={() => handleSelectChoice(i)}
+                  style={{
+                    border: "1px solid #ccc",
+                    padding: "10px",
+                    marginBottom: "5px",
+                    marginTop: "10px",
+                    background: `radial-gradient(circle at center, #ffffff, ${selectedChoice === i ? '#c5fcc6' : '#ffffff'})`,
+                    
+                    borderRadius: "5px",
+                  }}
+                >
                     {choice.isCorrect && (
                       <span style={{ color: "green", marginRight: "5px" }}>
                         Correct

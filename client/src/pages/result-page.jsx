@@ -97,65 +97,83 @@ const ExamResultPage = () => {
   };
 
   return (
-    <div className="exam-result-container">
+    <div
+      className="exam-result-container"
+      style={{ marginTop: "40px", display: "flex", justifyContent: "center" }}
+    >
       <Card
-        style={{
-          marginTop: "40px",
+        sx={{
           maxWidth: "800px",
-          width: "80%",
-          margin: "auto",
+          width: "100%",
+          borderRadius: "12px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
         <CardContent>
           <Typography
             variant="h4"
             gutterBottom
-            style={{ textAlign: "center", fontSize: "3.5rem" }}
+            align="center"
+            sx={{ fontSize: "2.5rem", color: "#333" }}
           >
             Exam Result
+          </Typography>
+          <div
+            style={{
+              border: "1px solid black",
+              opacity: "0.2",
+              marginBlock: "20px",
+            }}
+          ></div>
+          <Typography
+            variant="h6"
+            align="center"
+            fontWeight="bold"
+            fontSize="2rem"
+            sx={{ marginBottom: "10px", color: "#666" }}
+          >
+            Your Score: {score !== undefined ? `${score}%` : "Calculating..."}
           </Typography>
 
           <Typography
             variant="h6"
-            style={{
-              textAlign: "center",
-              fontSize: "3.5rem",
-              fontWeight: "bold",
-            }}
-          >
-            Your Score: {score !== undefined ? `${score}%` : "Calculating..."}
-          </Typography>
-          <Typography
-            style={{
-              textAlign: "center",
-              fontSize: "3.5rem",
-              fontWeight: "bold",
-            }}
-            variant="h6"
+            align="center"
+            fontWeight="bold"
+            fontSize="2rem"
             className={`result-label ${getResultLabel().toLowerCase()}`}
+            sx={{
+              marginBottom: "30px",
+              color: getResultLabel() === "PASSED" ? "#00796b" : "#d32f2f",
+            }}
           >
             {getResultLabel()}
           </Typography>
 
-          {getResultLabel() === "PASSED" ? (
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
               variant="contained"
-              color="primary"
-              onClick={handleReturnDashboard}
-              style={{ marginTop: "20px" }}
+              color={getResultLabel() === "PASSED" ? "primary" : "secondary"}
+              onClick={
+                getResultLabel() === "PASSED"
+                  ? handleReturnDashboard
+                  : handleRetakeExam
+              }
+              sx={{
+                marginRight: "10px",
+                textTransform: "none",
+                fontSize: "1rem",
+                padding: "10px 20px",
+              }}
             >
-              Return to Dashboard
+              {getResultLabel() === "PASSED"
+                ? "Return to Dashboard"
+                : "Retake Exam"}
             </Button>
-          ) : (
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleRetakeExam}
-              style={{ marginTop: "20px" }}
-            >
-              Retake Exam
-            </Button>
-          )}
+
+            {/* <Button variant="outlined" onClick={handleViewAnswers} sx={{ textTransform: "none", fontSize: "1rem", padding: "10px 20px", borderColor: "#999" }}>
+          View Answers
+        </Button> */}
+          </div>
         </CardContent>
       </Card>
     </div>
