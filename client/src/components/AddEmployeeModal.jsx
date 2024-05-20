@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogTitle, DialogContent, Button, DialogActions, TextField, FormGroup, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Button,
+  DialogActions,
+  TextField,
+  FormGroup,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import axios from "axios";
 
 const AddEmployeeModal = ({ isOpen, handleClose, departments }) => {
@@ -30,21 +42,36 @@ const AddEmployeeModal = ({ isOpen, handleClose, departments }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEmployeeDetails(prevDetails => ({
+    setEmployeeDetails((prevDetails) => ({
       ...prevDetails,
       [name]: value,
     }));
   };
 
   const handleSave = async () => {
-    const { empID, fullname, username, email, user_role, department, newDepartment } = employeeDetails;
-  
-    if (!empID || !fullname || !username || !email || !user_role || (!department && !newDepartment)) {
-      console.error('Missing required fields');
+    const {
+      empID,
+      fullname,
+      username,
+      email,
+      user_role,
+      department,
+      newDepartment,
+    } = employeeDetails;
+
+    if (
+      !empID ||
+      !fullname ||
+      !username ||
+      !email ||
+      !user_role ||
+      (!department && !newDepartment)
+    ) {
+      console.error("Missing required fields");
       // Handle error: show user a message or mark fields as required
       return;
     }
-  
+
     // Include empID in the submissionData
     const submissionData = {
       empID, // Added this line
@@ -54,16 +81,19 @@ const AddEmployeeModal = ({ isOpen, handleClose, departments }) => {
       user_role,
       department: newDepartment || department,
     };
-  
+
     try {
-      const response = await axios.post('http://localhost:3001/table/addEmp', submissionData);
-      
+      const response = await axios.post(
+        "http://localhost:3001/table/addEmp",
+        submissionData
+      );
+
       handleClose();
       // Update the employee list in the parent component if needed
     } catch (error) {
-      console.error('Error adding employee:', error);
+      console.error("Error adding employee:", error);
     }
-};
+  };
 
   const isFormValid =
     employeeDetails.empID &&
@@ -78,26 +108,26 @@ const AddEmployeeModal = ({ isOpen, handleClose, departments }) => {
       <DialogTitle>Add New Employee</DialogTitle>
       <DialogContent>
         <FormGroup>
-        <TextField
-  margin="dense"
-  label="Employee ID"
-  type="text"
-  fullWidth
-  variant="outlined"
-  name="empID" // Corrected to match the state key
-  value={employeeDetails.empID}
-  onChange={handleChange}
-/>
-        <TextField
-        margin="dense"
-        label="Full Name"
-        type="text"
-        fullWidth
-        variant="outlined"
-        name="fullname" // make sure this matches the state key
-        value={employeeDetails.fullname}
-        onChange={handleChange}
-         />
+          <TextField
+            margin="dense"
+            label="Employee ID"
+            type="text"
+            fullWidth
+            variant="outlined"
+            name="empID" // Corrected to match the state key
+            value={employeeDetails.empID}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            label="Full Name"
+            type="text"
+            fullWidth
+            variant="outlined"
+            name="fullname" // make sure this matches the state key
+            value={employeeDetails.fullname}
+            onChange={handleChange}
+          />
           <TextField
             margin="dense"
             label="Username"
@@ -138,7 +168,7 @@ const AddEmployeeModal = ({ isOpen, handleClose, departments }) => {
               onChange={handleChange}
               // You might want to add this property if not already present
               MenuProps={{
-                PaperProps: { 
+                PaperProps: {
                   style: {
                     maxHeight: "50%", // Adjust as needed
                   },
