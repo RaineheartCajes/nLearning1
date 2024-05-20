@@ -22,10 +22,10 @@ import ReturnDashboard from "../components/ReturnDashboard";
 import "../assets/styles/settings.css";
 
 export default function Settings() {
-  const { token, user, setUser, setUserType } = useAuth(); 
+  const { token, user, setUser, setUserType } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  
+
   const [userData, setUserData] = useState({
     username: user?.username || "",
     user_type: user?.user_type || "",
@@ -49,15 +49,15 @@ export default function Settings() {
           }
         );
         setUserData(response.data);
-       
+
         setUser(response.data);
-        setUserType(response.data.user_type); 
+        setUserType(response.data.user_type);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
     fetchUserData();
-  }, [token, setUser, setUserType]); 
+  }, [token, setUser, setUserType]);
 
   const handleSubmit = async () => {
     if (!token) {
@@ -73,9 +73,9 @@ export default function Settings() {
         }
       );
       setOpenSnackbar(true);
-     
+
       setUser(userData);
-      setUserType(userData.user_type); 
+      setUserType(userData.user_type);
     } catch (error) {
       console.error("Error updating user data:", error);
     }
@@ -87,7 +87,7 @@ export default function Settings() {
       setSelectedFile(file);
       const formData = new FormData();
       formData.append("image", file);
-  
+
       try {
         const response = await axios.post(
           `http://localhost:3001/settings/uploadProfileImage`,
@@ -100,9 +100,12 @@ export default function Settings() {
           }
         );
         console.log("File uploaded successfully:", response.data);
-  
+
         // Update user data with new image URL
-        const updatedUserData = { ...userData, imageUrl: response.data.imageUrl };
+        const updatedUserData = {
+          ...userData,
+          imageUrl: response.data.imageUrl,
+        };
         setUserData(updatedUserData);
         setUser((prev) => ({ ...prev, imageUrl: response.data.imageUrl }));
       } catch (error) {
@@ -110,7 +113,7 @@ export default function Settings() {
       }
     }
   };
-  
+
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
@@ -281,7 +284,11 @@ export default function Settings() {
               <Button size="sm" variant="outlined" color="neutral">
                 Cancel
               </Button>
-              <Button size="sm"  sx={{ bgcolor: "#e11d48"}} onClick={handleSubmit}>
+              <Button
+                size="sm"
+                sx={{ bgcolor: "#e11d48" }}
+                onClick={handleSubmit}
+              >
                 Submit
               </Button>
             </CardActions>
@@ -289,7 +296,6 @@ export default function Settings() {
         </Card>
       </Stack>
 
-      
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}

@@ -33,29 +33,35 @@ export default function Navbar() {
     const fetchData = async () => {
       try {
         if (isAuthenticated && token) {
-          const usernameResponse = await axios.get("http://localhost:3001/auth/username", {
+          const usernameResponse = await axios.get(
+            "http://localhost:3001/auth/username",
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+          setUsername(usernameResponse.data.username);
+        }
+
+        const profileResponse = await axios.get(
+          "http://localhost:3001/settings/profile",
+          {
             headers: {
               Authorization: token,
             },
-          });
-          setUsername(usernameResponse.data.username);
-        }
-  
-        const profileResponse = await axios.get("http://localhost:3001/settings/profile", {
-          headers: {
-            Authorization: token,
-          },
-        });
+          }
+        );
         setUserData(profileResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         // Handle error appropriately, like showing an error message to the user
       }
     };
-  
+
     fetchData(); // Call fetchData when isAuthenticated, token, or userData changes
-  }, [isAuthenticated, token, userData]);
-  
+  }, [isAuthenticated, token]);
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
